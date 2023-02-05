@@ -9,7 +9,7 @@ import { Virtual } from 'swiper'
 import { execute } from '~/data.server'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
-import { Content, Header, Main, Title } from '~/ui'
+import { Content, Header, Main, SVGViewer, Title } from '~/ui'
 import {
   ImageDocument,
   ImageItemFragment,
@@ -31,23 +31,6 @@ export const loader = async ({ params }: LoaderArgs) => {
     throw new Response('Image Not Found', { status: 404 })
   }
   return json({ image })
-}
-
-const styles = {
-  slider: {
-    height: '85vh',
-  },
-  slide: {
-    height: '100%',
-  },
-  content: {
-    maxHeight: '100%',
-  },
-  image: {
-    maxWidth: '100%',
-    maxHeight: '95%',
-    marginTop: '10px',
-  },
 }
 
 export default function SectorImagePage() {
@@ -136,24 +119,17 @@ export default function SectorImagePage() {
           initialSlide={imageIndex}
           modules={[Virtual]}
           virtual={virtual}
-          style={styles.slider}
+          className="w-full h-full border border-red-500"
           onSlideChange={onSlideChange}
           onSwiper={onSwiperReady}
         >
           {images?.map((image, index) => (
-            <SwiperSlide
-              key={image.id}
-              style={styles.slide}
-              virtualIndex={index}
-            >
-              <div style={styles.content}>
-                <Title>{image.attributes?.name}</Title>
-                <img
-                  style={styles.image}
-                  src={image.attributes?.file?.data?.attributes?.fullUrl}
-                  alt={image.attributes?.name}
-                />
-              </div>
+            <SwiperSlide key={image.id} virtualIndex={index}>
+              <Title>{image.attributes?.name}</Title>
+              <SVGViewer
+                className="w-full aspect-video bg-slate-800"
+                image={image}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

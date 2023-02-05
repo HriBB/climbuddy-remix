@@ -1,16 +1,11 @@
+import clsx from 'clsx'
+
 type Props = React.ComponentProps<'ol'> & {
   children: React.ReactNode
 }
 
-const styles = {
-  margin: 0,
-  marginBottom: '1rem',
-}
-
-export const List = ({ children, ...props }: Props) => {
-  return (
-    <ol {...props} style={styles}>
-      {children}
-    </ol>
-  )
-}
+export const List = ({ children, className, ...props }: Props) => (
+  <ol className={clsx('mt-0 mb-4 p-4', className)} {...props}>
+    {children}
+  </ol>
+)

@@ -30,7 +30,7 @@ export default function IndexPage() {
         <Title>Locations</Title>
         <List>
           {locations.map((location) => (
-            <ListItem key={location.id} className={location.attributes?.slug}>
+            <ListItem key={location.id}>
               <Link to={`/${location.attributes?.slug}`}>
                 {location.attributes?.name}
               </Link>

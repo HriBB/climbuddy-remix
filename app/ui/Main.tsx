@@ -1,13 +1,11 @@
+import clsx from 'clsx'
+
 type Props = React.ComponentProps<'main'> & {
   children: React.ReactNode
 }
 
-const styles = {}
-
-export const Main = ({ children, ...props }: Props) => {
-  return (
-    <main {...props} style={styles}>
-      {children}
-    </main>
-  )
-}
+export const Main = ({ children, className, ...props }: Props) => (
+  <main className={clsx('h-full flex flex-col', className)} {...props}>
+    {children}
+  </main>
+)

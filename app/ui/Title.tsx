@@ -1,18 +1,12 @@
+import clsx from 'clsx'
+
 type Props = React.ComponentProps<'div'> & {
   children: React.ReactNode
   Tag?: 'h1' | 'h2'
 }
 
-const styles = {
-  fontSize: '2em',
-  padding: '1rem',
-  margin: 0,
-}
-
-export const Title = ({ children, Tag = 'h1', ...props }: Props) => {
-  return (
-    <Tag {...props} style={styles}>
-      {children}
-    </Tag>
-  )
-}
+export const Title = ({ children, className, Tag = 'h1', ...props }: Props) => (
+  <Tag className={clsx('text-3xl m-0 p-4', className)} {...props}>
+    {children}
+  </Tag>
+)

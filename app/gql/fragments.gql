@@ -2,10 +2,15 @@ fragment File on UploadFileEntity {
   id
   attributes {
     name
+    url
     fullUrl
     width
     height
     formats
+    hash
+    mime
+    provider
+    size
   }
 }
 
@@ -24,6 +29,7 @@ fragment ImageItem on ImageEntity {
     name
     slug
     order
+    routeCount
     file {
       data {
         ...File
@@ -39,6 +45,7 @@ fragment Image on ImageEntity {
     slug
     order
     data
+    routeCount
     file {
       data {
         ...File

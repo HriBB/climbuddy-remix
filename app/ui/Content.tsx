@@ -1,13 +1,11 @@
+import clsx from 'clsx'
+
 type Props = React.ComponentProps<'div'> & {
   children: React.ReactNode
 }
 
-const styles = {}
-
-export const Content = ({ children, ...props }: Props) => {
-  return (
-    <div {...props} style={styles}>
-      {children}
-    </div>
-  )
-}
+export const Content = ({ children, className, ...props }: Props) => (
+  <div className={clsx('flex-1 border border-blue-600', className)} {...props}>
+    {children}
+  </div>
+)

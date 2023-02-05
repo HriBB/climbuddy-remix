@@ -1520,17 +1520,17 @@ export type UsersPermissionsUserRelationResponseCollection = {
   data: Array<UsersPermissionsUserEntity>;
 };
 
-export type FileFragment = { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null };
+export type FileFragment = { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null };
 
 export type RouteItemFragment = { __typename?: 'RouteEntity', id?: string | null, attributes?: { __typename?: 'Route', name: string, slug: string, order: number } | null };
 
-export type ImageItemFragment = { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null } | null } | null } | null };
+export type ImageItemFragment = { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, routeCount: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null } | null } | null } | null };
 
-export type ImageFragment = { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, data?: any | null, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null } | null } | null } | null };
+export type ImageFragment = { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, data?: any | null, routeCount: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null } | null } | null } | null };
 
 export type SectorItemFragment = { __typename?: 'SectorEntity', id?: string | null, attributes?: { __typename?: 'Sector', name: string, slug: string, order: number } | null };
 
-export type SectorFragment = { __typename?: 'SectorEntity', id?: string | null, attributes?: { __typename?: 'Sector', name: string, slug: string, order: number, location?: { __typename?: 'LocationEntityResponse', data?: { __typename?: 'LocationEntity', id?: string | null, attributes?: { __typename?: 'Location', name: string, slug: string } | null } | null } | null, images?: { __typename?: 'ImageRelationResponseCollection', data: Array<{ __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null } | null } | null } | null }> } | null } | null };
+export type SectorFragment = { __typename?: 'SectorEntity', id?: string | null, attributes?: { __typename?: 'Sector', name: string, slug: string, order: number, location?: { __typename?: 'LocationEntityResponse', data?: { __typename?: 'LocationEntity', id?: string | null, attributes?: { __typename?: 'Location', name: string, slug: string } | null } | null } | null, images?: { __typename?: 'ImageRelationResponseCollection', data: Array<{ __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, routeCount: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null } | null } | null } | null }> } | null } | null };
 
 export type LocationItemFragment = { __typename?: 'LocationEntity', id?: string | null, attributes?: { __typename?: 'Location', name: string, slug: string, order: number } | null };
 
@@ -1543,7 +1543,7 @@ export type ImageQueryVariables = Exact<{
 }>;
 
 
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'ImageEntityResponse', data?: { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, data?: any | null, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null } | null } | null } | null } | null } | null };
+export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'ImageEntityResponse', data?: { __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, data?: any | null, routeCount: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null } | null } | null } | null } | null } | null };
 
 export type LocationQueryVariables = Exact<{
   location?: InputMaybe<Scalars['String']>;
@@ -1563,7 +1563,7 @@ export type SectorQueryVariables = Exact<{
 }>;
 
 
-export type SectorQuery = { __typename?: 'Query', sector?: { __typename?: 'SectorEntityResponse', data?: { __typename?: 'SectorEntity', id?: string | null, attributes?: { __typename?: 'Sector', name: string, slug: string, order: number, location?: { __typename?: 'LocationEntityResponse', data?: { __typename?: 'LocationEntity', id?: string | null, attributes?: { __typename?: 'Location', name: string, slug: string } | null } | null } | null, images?: { __typename?: 'ImageRelationResponseCollection', data: Array<{ __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null } | null } | null } | null } | null }> } | null } | null } | null } | null };
+export type SectorQuery = { __typename?: 'Query', sector?: { __typename?: 'SectorEntityResponse', data?: { __typename?: 'SectorEntity', id?: string | null, attributes?: { __typename?: 'Sector', name: string, slug: string, order: number, location?: { __typename?: 'LocationEntityResponse', data?: { __typename?: 'LocationEntity', id?: string | null, attributes?: { __typename?: 'Location', name: string, slug: string } | null } | null } | null, images?: { __typename?: 'ImageRelationResponseCollection', data: Array<{ __typename?: 'ImageEntity', id?: string | null, attributes?: { __typename?: 'Image', name: string, slug: string, order: number, routeCount: number, file?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', name: string, url: string, fullUrl: string, width?: number | null, height?: number | null, formats?: any | null, hash: string, mime: string, provider: string, size: number } | null } | null } | null } | null }> } | null } | null } | null } | null };
 
 export const RouteItemFragmentDoc = gql`
     fragment RouteItem on RouteEntity {
@@ -1580,10 +1580,15 @@ export const FileFragmentDoc = gql`
   id
   attributes {
     name
+    url
     fullUrl
     width
     height
     formats
+    hash
+    mime
+    provider
+    size
   }
 }
     `;
@@ -1595,6 +1600,7 @@ export const ImageFragmentDoc = gql`
     slug
     order
     data
+    routeCount
     file {
       data {
         ...File
@@ -1610,6 +1616,7 @@ export const ImageItemFragmentDoc = gql`
     name
     slug
     order
+    routeCount
     file {
       data {
         ...File

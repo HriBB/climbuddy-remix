@@ -1,0 +1,7 @@
+query location($location: String) {
+  location: locationBySlug(location: $location) {
+    data {
+      ...Location
+    }
+  }
+}

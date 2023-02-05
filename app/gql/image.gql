@@ -1,0 +1,7 @@
+query image($location: String, $sector: String, $image: String) {
+  image: imageBySlug(location: $location, sector: $sector, image: $image) {
+    data {
+      ...Image
+    }
+  }
+}

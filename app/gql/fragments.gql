@@ -1,0 +1,103 @@
+fragment File on UploadFileEntity {
+  id
+  attributes {
+    name
+    fullUrl
+    width
+    height
+    formats
+  }
+}
+
+fragment RouteItem on RouteEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+  }
+}
+
+fragment ImageItem on ImageEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    file {
+      data {
+        ...File
+      }
+    }
+  }
+}
+
+fragment Image on ImageEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    data
+    file {
+      data {
+        ...File
+      }
+    }
+  }
+}
+
+fragment SectorItem on SectorEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+  }
+}
+
+fragment Sector on SectorEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    location {
+      data {
+        id
+        attributes {
+          name
+          slug
+        }
+      }
+    }
+    images(sort: "order", pagination: { start: 0, limit: -1 }) {
+      data {
+        ...ImageItem
+      }
+    }
+  }
+}
+
+fragment LocationItem on LocationEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+  }
+}
+
+fragment Location on LocationEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    sectors(sort: "order", pagination: { start: 0, limit: -1 }) {
+      data {
+        ...SectorItem
+      }
+    }
+  }
+}

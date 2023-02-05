@@ -1,0 +1,7 @@
+query sector($location: String, $sector: String) {
+  sector: sectorBySlug(location: $location, sector: $sector) {
+    data {
+      ...Sector
+    }
+  }
+}

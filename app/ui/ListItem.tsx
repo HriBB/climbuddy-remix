@@ -5,7 +5,13 @@ type Props = React.ComponentProps<'li'> & {
 }
 
 export const ListItem = ({ children, className, ...props }: Props) => (
-  <li className={clsx('text-lg flex p-2 border', className)} {...props}>
+  <li
+    className={clsx(
+      'text-lg border-b last:border-0 [&>a]:block [&>a]:p-2',
+      className
+    )}
+    {...props}
+  >
     {children}
   </li>
 )

@@ -6,7 +6,7 @@ type Props = React.ComponentProps<'div'> & {
 }
 
 export const Title = ({ children, className, Tag = 'h1', ...props }: Props) => (
-  <Tag className={clsx('text-3xl m-0 p-4', className)} {...props}>
+  <Tag className={clsx('text-2xl m-0 px-4 py-4 pt-0', className)} {...props}>
     {children}
   </Tag>
 )

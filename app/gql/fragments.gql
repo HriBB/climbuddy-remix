@@ -44,11 +44,47 @@ fragment Image on ImageEntity {
     name
     slug
     order
-    data
+    svg
     routeCount
     file {
       data {
         ...File
+      }
+    }
+    routes(sort: "order", pagination: { start: 0, limit: -1 }) {
+      data {
+        ...RouteItem
+      }
+    }
+    prevImage {
+      data {
+        ...PreloadImage
+      }
+    }
+    nextImage {
+      data {
+        ...PreloadImage
+      }
+    }
+  }
+}
+
+fragment PreloadImage on ImageEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    svg
+    routeCount
+    file {
+      data {
+        ...File
+      }
+    }
+    routes(sort: "order", pagination: { start: 0, limit: -1 }) {
+      data {
+        ...RouteItem
       }
     }
   }

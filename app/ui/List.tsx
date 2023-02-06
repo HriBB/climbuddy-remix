@@ -5,7 +5,7 @@ type Props = React.ComponentProps<'ol'> & {
 }
 
 export const List = ({ children, className, ...props }: Props) => (
-  <ol className={clsx('mt-0 mb-4 p-4', className)} {...props}>
+  <ol className={clsx('m-0 px-4', className)} {...props}>
     {children}
   </ol>
 )

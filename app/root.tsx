@@ -15,7 +15,7 @@ import customCss from './styles/custom.css'
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
-  title: 'New Remix App',
+  title: 'ClimBuddy',
   viewport: 'width=device-width,initial-scale=1',
 })
 

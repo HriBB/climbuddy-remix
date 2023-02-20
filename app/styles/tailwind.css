@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.2.7 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -526,11 +526,6 @@ video {
   margin-right: auto;
 }
 
-.my-2 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
 .flex {
   display: flex;
 }
@@ -553,6 +548,10 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.min-w-\[100px\] {
+  min-width: 100px;
 }
 
 .flex-1 {
@@ -583,19 +582,14 @@ video {
   border-bottom-width: 1px;
 }
 
-.bg-slate-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
-}
-
-.bg-slate-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
-}
-
 .bg-slate-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+}
+
+.bg-slate-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
 }
 
 .p-4 {
@@ -616,14 +610,14 @@ video {
   padding-top: 0px;
 }
 
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .last\:border-0:last-child {
@@ -636,9 +630,4 @@ video {
 
 .\[\&\>a\]\:p-2>a {
   padding: 0.5rem;
-}
-
-.\[\&\>a\]\:py-2>a {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }

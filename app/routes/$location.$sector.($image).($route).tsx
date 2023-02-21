@@ -18,6 +18,7 @@ import {
   ImageQueryVariables,
   RouteEntity,
 } from '~/types'
+import { getUrl } from '~/location'
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   defaultShouldRevalidate,
@@ -67,9 +68,6 @@ export default function SectorImagePage() {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
-  const locationUrl = `/${location?.attributes?.slug}`
-  const sectorUrl = `${locationUrl}/${sector?.attributes?.slug}`
-
   const images = mounted ? sector?.attributes?.images?.data : [image]
 
   const imageIndex =
@@ -82,7 +80,6 @@ export default function SectorImagePage() {
    */
   const swiperRef = useRef<SwiperType | null>(null)
   const imageRef = useRef<ImageItemFragment | null | undefined>(image)
-
   const virtual = useMemo(
     () =>
       mounted
@@ -94,36 +91,27 @@ export default function SectorImagePage() {
         : false,
     [mounted]
   )
-
   const navigate = useNavigate()
-
   const onSwiperReady = useCallback(
     (swiper: SwiperType) => (swiperRef.current = swiper),
     []
   )
-
   const onSlideChange = useCallback(
     (swiper: SwiperType) => {
-      console.log('onSlideChange', swiper.activeIndex, swiper.realIndex)
       const images = sector?.attributes?.images?.data || []
       const image = images[swiper.activeIndex]
       if (image && image.id !== imageRef.current?.id) {
         imageRef.current = image
-        const url = `${sectorUrl}/${image.attributes?.slug}`
-        console.log('====> navigate to', url)
-        navigate(url, { replace: true })
+        navigate(getUrl(location, sector, image), { replace: true })
       }
     },
-    [sectorUrl, sector?.attributes?.images?.data, navigate]
+    [location, sector, navigate]
   )
-
   useEffect(() => {
     if (image && image.id !== imageRef.current?.id) {
-      console.log('useImageChangeEffect')
       const images = sector?.attributes?.images?.data || []
       const index = images.findIndex((i) => i.id === image.id)
       if (index > -1) {
-        console.log('====> change slide because of history update to', index)
         imageRef.current = image
         swiperRef.current?.slideTo(index)
       }
@@ -158,14 +146,13 @@ export default function SectorImagePage() {
       data: nextImage.attributes?.svg,
     }
   }
-  console.log(images)
 
   return (
     <Main>
       <Header>
         <Link to="/">Home</Link> &gt;{' '}
-        <Link to={locationUrl}>{location.attributes?.name}</Link> &gt;{' '}
-        <Link to={sectorUrl}>{sector.attributes?.name}</Link>
+        <Link to={getUrl(location)}>{location.attributes?.name}</Link> &gt;{' '}
+        <Link to={getUrl(location, sector)}>{sector.attributes?.name}</Link>
       </Header>
       <Content>
         <Swiper
@@ -181,23 +168,23 @@ export default function SectorImagePage() {
           onSlideChange={onSlideChange}
           onSwiper={onSwiperReady}
         >
-          {images?.map((i, index) => {
-            const isActive = index === imageIndex
-            const isVisible = index >= imageIndex - 1 && index <= imageIndex + 1
-            const cached = isVisible ? cache.current[i.id!] : undefined
-            const imageUrl = `${sectorUrl}/${i.attributes?.slug}`
+          {images?.map((image, i) => {
+            const ii = imageIndex
+            const isActive = !mounted || i === ii
+            const isVisible = !mounted || (i >= ii - 1 && i <= ii + 1)
+            const cached = isVisible ? cache.current[image.id!] : undefined
             return (
               <SwiperSlide
-                key={`${i.id}-${index}`}
-                virtualIndex={index}
-                className="flex min-w-[100px] flex-col"
+                key={image.id}
+                virtualIndex={i}
+                className="flex flex-col"
               >
-                <Title>{i.attributes?.name}</Title>
-                {(!mounted || isVisible) && (
+                <Title>{image.attributes?.name}</Title>
+                {isVisible && (
                   <>
                     <PaperImage
                       className="w-full aspect-video bg-slate-800"
-                      image={i}
+                      image={image}
                       route={isActive ? route : null}
                       data={cached?.data}
                     />
@@ -206,7 +193,7 @@ export default function SectorImagePage() {
                         <RouteListItem
                           key={r.id}
                           route={r}
-                          to={`${imageUrl}/${r.attributes?.slug}`}
+                          to={getUrl(location, sector, image, r)}
                           active={isActive && route?.id === r.id}
                         />
                       ))}

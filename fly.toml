@@ -1,4 +1,4 @@
-# fly.toml file generated for climbuddy on 2023-02-20T08:30:51+01:00
+# fly.toml file generated for climbuddy on 2023-02-20T19:10:42+01:00
 
 app = "climbuddy"
 kill_signal = "SIGINT"
@@ -12,7 +12,7 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 8080
+  internal_port = 3000
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

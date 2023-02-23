@@ -67,9 +67,9 @@ export const PaperImage = ({ className, image, route, data }: Props) => {
                 fill={'none'}
                 stroke={selected ? 'red' : 'black'}
                 strokeWidth={strokeWidth}
-                onClick={() => {
-                  console.log('click on', routeId)
-                }}
+                //onClick={() => {
+                //  console.log('click on', routeId)
+                //}}
               >
                 {items.map((item) =>
                   item.type === 'Circle' && !selected ? null : (

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { json, LoaderArgs } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react'
+import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import type { ShouldRevalidateFunction } from '@remix-run/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperType } from 'swiper'
@@ -9,8 +9,11 @@ import { Virtual, Keyboard } from 'swiper'
 import { execute } from '~/data.server'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
-import { Content, Header, Main, RouteList, RouteListItem, Title } from '~/ui'
+import { Content, Header, Main, Title } from '~/ui'
 import { PaperImage, ImageData } from '~/paper'
+import { RouteList, RouteListItem} from '~/route'
+import { getUrl } from '~/location'
+import { useImageIndex, useImageRoute, useMounted } from '~/image'
 import {
   ImageDocument,
   ImageItemFragment,
@@ -18,7 +21,6 @@ import {
   ImageQueryVariables,
   RouteEntity,
 } from '~/types'
-import { getUrl } from '~/location'
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   defaultShouldRevalidate,
@@ -56,24 +58,12 @@ export default function SectorImagePage() {
   const { sector } = useSectorData()
   const { image } = useLoaderData<typeof loader>()
 
-  const params = useParams()
-  const route = useMemo(
-    () =>
-      image.attributes?.routes?.data.find(
-        (r) => r.attributes?.slug === params.route
-      ),
-    [image.attributes?.routes?.data, params.route]
-  )
+  const route = useImageRoute({ image })
+  const imageIndex = useImageIndex({ sector, image})
 
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const mounted = useMounted()
 
   const images = mounted ? sector?.attributes?.images?.data : [image]
-
-  const imageIndex =
-    sector?.attributes?.images?.data.findIndex(
-      (i) => i.attributes?.slug === image.attributes?.slug
-    ) || 0
 
   /**
    * Swiper

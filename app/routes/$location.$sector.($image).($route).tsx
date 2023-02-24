@@ -10,16 +10,20 @@ import { execute } from '~/data.server'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
 import { Content, Header, Main, Title } from '~/ui'
-import { PaperImage, ImageData } from '~/paper'
-import { RouteList, RouteListItem} from '~/route'
+import { PaperImage } from '~/paper'
+import { RouteList, RouteListItem } from '~/route'
 import { getUrl } from '~/location'
-import { useImageIndex, useImageRoute, useMounted } from '~/image'
+import {
+  useImageCache,
+  useImageIndex,
+  useImageRoute,
+  useMounted,
+} from '~/image'
 import {
   ImageDocument,
   ImageItemFragment,
   ImageQuery,
   ImageQueryVariables,
-  RouteEntity,
 } from '~/types'
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -58,9 +62,9 @@ export default function SectorImagePage() {
   const { sector } = useSectorData()
   const { image } = useLoaderData<typeof loader>()
 
+  const imageIndex = useImageIndex({ sector, image })
   const route = useImageRoute({ image })
-  const imageIndex = useImageIndex({ sector, image})
-
+  const cache = useImageCache({ image })
   const mounted = useMounted()
 
   const images = mounted ? sector?.attributes?.images?.data : [image]
@@ -107,35 +111,6 @@ export default function SectorImagePage() {
       }
     }
   }, [image, sector?.attributes?.images?.data])
-
-  /**
-   * Cache
-   */
-  type Cache = {
-    routes: RouteEntity[]
-    data: ImageData
-  }
-  const cache = useRef<{ [key: string]: Cache }>({})
-  if (!cache.current[image.id!]) {
-    cache.current[image.id!] = {
-      routes: image.attributes?.routes?.data || [],
-      data: image.attributes?.svg,
-    }
-  }
-  const prevImage = image.attributes?.prevImage?.data
-  if (prevImage && !cache.current[prevImage.id!]) {
-    cache.current[prevImage.id!] = {
-      routes: prevImage.attributes?.routes?.data || [],
-      data: prevImage.attributes?.svg,
-    }
-  }
-  const nextImage = image.attributes?.nextImage?.data
-  if (nextImage && !cache.current[nextImage.id!]) {
-    cache.current[nextImage.id!] = {
-      routes: nextImage.attributes?.routes?.data || [],
-      data: nextImage.attributes?.svg,
-    }
-  }
 
   return (
     <Main>

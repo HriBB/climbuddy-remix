@@ -1,4 +1,5 @@
 export * from './getImageSrc'
+export * from './useImageCache'
 export * from './useImageIndex'
 export * from './useImageRoute'
 export * from './useMounted'

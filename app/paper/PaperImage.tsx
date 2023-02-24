@@ -1,5 +1,6 @@
-import { ImageEntity, RouteEntity } from '~/types'
 import clsx from 'clsx'
+import { getImageSrc } from '~/image'
+import { ImageEntity, RouteEntity } from '~/types'
 
 export enum ItemName {
   Circle = 'Circle',
@@ -41,6 +42,7 @@ type Props = {
 }
 
 export const PaperImage = ({ className, image, route, data }: Props) => {
+  const src = getImageSrc(image)
   const file = image.attributes?.file?.data
   const width = file?.attributes?.width!
   const height = file?.attributes?.height!
@@ -54,7 +56,7 @@ export const PaperImage = ({ className, image, route, data }: Props) => {
         height={height}
         viewBox={`0, 0, ${width} ${height}`}
       >
-        <image width={width} height={height} href={file?.attributes?.fullUrl} />
+        <image width={width} height={height} href={src} />
         {data &&
           Object.keys(data).map((routeId) => {
             const items = data[routeId]

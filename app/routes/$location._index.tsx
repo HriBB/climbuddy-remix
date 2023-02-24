@@ -1,4 +1,5 @@
 import { Link } from '@remix-run/react'
+import { getUrl } from '~/location'
 import { Content, Header, List, ListItem, Main, Title } from '~/ui'
 import { useLocationData } from './$location'
 
@@ -14,9 +15,7 @@ export default function LocationPage() {
         <List>
           {location.attributes?.sectors?.data.map((sector) => (
             <ListItem key={sector.id}>
-              <Link
-                to={`/${location.attributes?.slug}/${sector.attributes?.slug}`}
-              >
+              <Link to={getUrl(location, sector)}>
                 {sector.attributes?.name}
               </Link>
             </ListItem>

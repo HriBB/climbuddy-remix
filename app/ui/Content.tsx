@@ -5,7 +5,7 @@ type Props = React.ComponentProps<'div'> & {
 }
 
 export const Content = ({ children, className, ...props }: Props) => (
-  <div className={clsx('flex-1 overflow-auto', className)} {...props}>
+  <div className={clsx(className)} {...props}>
     {children}
   </div>
 )

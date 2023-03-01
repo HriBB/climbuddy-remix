@@ -1,1 +1,1 @@
-export * from './PaperImage'
+export * from './SvgImage'

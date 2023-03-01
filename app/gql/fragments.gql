@@ -14,12 +14,27 @@ fragment File on UploadFileEntity {
   }
 }
 
+fragment Grade on GradeEntity {
+  id
+  attributes {
+    grade
+    score
+  }
+}
+
 fragment RouteItem on RouteEntity {
   id
   attributes {
     name
     slug
     order
+    sitstart
+    description
+    grade {
+      data {
+        ...Grade
+      }
+    }
   }
 }
 

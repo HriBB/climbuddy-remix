@@ -10,8 +10,7 @@ import {
 
 import swiperCss from '../node_modules/swiper/swiper.min.css'
 import swiperVirtualCss from '../node_modules/swiper/modules/virtual/virtual.min.css'
-import tailwindCss from './styles/tailwind.css'
-import customCss from './styles/custom.css'
+import tailwindCss from './tailwind.css'
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -24,7 +23,6 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: swiperCss },
     { rel: 'stylesheet', href: swiperVirtualCss },
     { rel: 'stylesheet', href: tailwindCss },
-    { rel: 'stylesheet', href: customCss },
   ]
 }
 

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+
 import { json, LoaderArgs } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate } from '@remix-run/react'
+import { Link, NavLink, useLoaderData, useNavigate } from '@remix-run/react'
 import type { ShouldRevalidateFunction } from '@remix-run/react'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperType } from 'swiper'
 import { Virtual, Keyboard } from 'swiper'
@@ -9,9 +11,8 @@ import { Virtual, Keyboard } from 'swiper'
 import { execute } from '~/data.server'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
-import { Content, Header, Main, Title } from '~/ui'
-import { PaperImage } from '~/paper'
-import { RouteList, RouteListItem } from '~/route'
+import { Content, Header, List, ListItem, Main, Title } from '~/ui'
+import { SvgImage } from '~/paper'
 import { getUrl } from '~/location'
 import {
   useImageCache,
@@ -56,6 +57,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 }
 
 const swiperModules = [Virtual, Keyboard]
+const virtualOptions = { enabled: true, addSlidesBefore: 1, addSlidesAfter: 1 }
 
 export default function SectorImagePage() {
   const { location } = useLocationData()
@@ -67,26 +69,12 @@ export default function SectorImagePage() {
   const cache = useImageCache({ image })
   const mounted = useMounted()
 
-  const images = mounted ? sector?.attributes?.images?.data : [image]
-
-  /**
-   * Swiper
-   */
   const swiperRef = useRef<SwiperType | null>(null)
   const imageRef = useRef<ImageItemFragment | null | undefined>(image)
-  const virtual = useMemo(
-    () =>
-      mounted
-        ? {
-            enabled: true,
-            addSlidesBefore: 1,
-            addSlidesAfter: 1,
-          }
-        : false,
-    [mounted]
-  )
+  const virtual = useMemo(() => (mounted ? virtualOptions : false), [mounted])
+  const images = mounted ? sector?.attributes?.images?.data : [image]
   const navigate = useNavigate()
-  const onSwiperReady = useCallback(
+  const onSwiper = useCallback(
     (swiper: SwiperType) => (swiperRef.current = swiper),
     []
   )
@@ -113,15 +101,16 @@ export default function SectorImagePage() {
   }, [image, sector?.attributes?.images?.data])
 
   return (
-    <Main>
+    <Main className="fixed w-full h-full">
       <Header>
         <Link to="/">Home</Link> &gt;{' '}
         <Link to={getUrl(location)}>{location.attributes?.name}</Link> &gt;{' '}
         <Link to={getUrl(location, sector)}>{sector.attributes?.name}</Link>
       </Header>
-      <Content>
+      <Content className="flex-1">
         <Swiper
           key={mounted ? 'virtual' : 'non-virtual'}
+          className="w-full h-full"
           spaceBetween={0}
           slidesPerView={1}
           centeredSlides
@@ -129,9 +118,8 @@ export default function SectorImagePage() {
           modules={swiperModules}
           keyboard={{ enabled: true }}
           virtual={virtual}
-          className="w-full h-full"
+          onSwiper={onSwiper}
           onSlideChange={onSlideChange}
-          onSwiper={onSwiperReady}
         >
           {images?.map((image, i) => {
             const ii = imageIndex
@@ -140,30 +128,42 @@ export default function SectorImagePage() {
             const cached = isVisible ? cache.current[image.id!] : undefined
             return (
               <SwiperSlide
+                className="flex flex-col"
                 key={image.id}
                 virtualIndex={i}
-                className="flex flex-col"
               >
                 <Title>{image.attributes?.name}</Title>
                 {isVisible && (
-                  <>
-                    <PaperImage
-                      className="w-full aspect-video bg-slate-800"
-                      image={image}
-                      route={isActive ? route : null}
-                      data={cached?.data}
-                    />
-                    <RouteList>
-                      {cached?.routes?.map((r) => (
-                        <RouteListItem
-                          key={r.id}
-                          route={r}
-                          to={getUrl(location, sector, image, r)}
-                          active={isActive && route?.id === r.id}
-                        />
-                      ))}
-                    </RouteList>
-                  </>
+                  <div className="flex flex-1 flex-col md:flex-row-reverse">
+                    <div className="relative aspect-video md:aspect-auto md:flex-1 bg-slate-800">
+                      <SvgImage
+                        className="absolute top-0 left-0 right-0 bottom-0"
+                        image={image}
+                        route={isActive ? route : null}
+                        data={cached?.data}
+                      />
+                    </div>
+                    <div className="swiper-no-swiping relative flex-1 md:flex-none md:w-[250px]">
+                      <List className="absolute top-0 left-0 right-0 bottom-0 overflow-auto">
+                        {cached?.routes?.map((r) => {
+                          const isActiveRoute = isActive && route?.id === r.id
+                          const grade = r.attributes?.grade
+                          return (
+                            <ListItem key={r.id}>
+                              <NavLink
+                                className={isActiveRoute ? 'bg-slate-200' : ''}
+                                to={getUrl(location, sector, image, r)}
+                              >
+                                {r.attributes?.name}
+                                {grade && `, ${grade.data?.attributes?.grade}`}
+                                {r.attributes?.sitstart && ', ss'}
+                              </NavLink>
+                            </ListItem>
+                          )
+                        })}
+                      </List>
+                    </div>
+                  </div>
                 )}
               </SwiperSlide>
             )

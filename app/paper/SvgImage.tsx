@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { getImageSrc } from '~/image'
 import { ImageEntity, RouteEntity } from '~/types'
 
@@ -41,46 +40,47 @@ type Props = {
   data?: ImageData | null
 }
 
-export const PaperImage = ({ className, image, route, data }: Props) => {
+export const SvgImage = ({ className, image, route, data }: Props) => {
   const src = getImageSrc(image)
   const file = image.attributes?.file?.data
   const width = file?.attributes?.width!
   const height = file?.attributes?.height!
-  const strokeWidth = 8
 
   return (
-    <div className={clsx('relative overflow-hidden', className)}>
+    <div className={className}>
       <svg
-        className="w-auto h-full mx-auto"
+        className="w-full h-full mx-auto"
         width={width}
         height={height}
         viewBox={`0, 0, ${width} ${height}`}
       >
         <image width={width} height={height} href={src} />
         {data &&
-          Object.keys(data).map((routeId) => {
-            const items = data[routeId]
-            if (!items || !items.length) return null
-            const selected = route && route.id === routeId
-
-            return (
-              <g
-                key={routeId}
-                fill={'none'}
-                stroke={selected ? 'red' : 'black'}
-                strokeWidth={strokeWidth}
-                //onClick={() => {
-                //  console.log('click on', routeId)
-                //}}
-              >
-                {items.map((item) =>
-                  item.type === 'Circle' && !selected ? null : (
-                    <path key={item.id} d={item.pathData} />
-                  )
-                )}
-              </g>
-            )
-          })}
+          Object.keys(data)
+            .sort((id) => (route && route.id === id ? 1 : -1))
+            .map((id) => {
+              const items = data[id]
+              if (!items || !items.length) return null
+              const selected = route && route.id === id
+              return (
+                <g
+                  key={id}
+                  fill="none"
+                  stroke={selected ? 'red' : 'black'}
+                  strokeWidth={2}
+                >
+                  {items.map((item) =>
+                    item.type === 'Circle' && !selected ? null : (
+                      <path
+                        key={item.id}
+                        d={item.pathData}
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )
+                  )}
+                </g>
+              )
+            })}
       </svg>
     </div>
   )

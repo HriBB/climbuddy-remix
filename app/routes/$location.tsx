@@ -1,12 +1,7 @@
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import { execute } from '~/data.server'
-import {
-  LocationDocument,
-  LocationFragment,
-  LocationQuery,
-  LocationQueryVariables,
-} from '~/types'
+import { fetchLocation } from '~/location'
+import { LocationFragment } from '~/types'
 
 type Params = {
   location: string
@@ -20,10 +15,7 @@ export const useLocationData = () =>
   useRouteLoaderData('routes/$location') as LocationData
 
 export const loader = async ({ params }: { params: Params }) => {
-  const { data, errors } = await execute<LocationQuery, LocationQueryVariables>(
-    LocationDocument,
-    params
-  )
+  const { data, errors } = await fetchLocation(params)
   const location = data?.location?.data
   const error = !!errors?.length && errors.map((e) => e.message).join('\n')
   if (error) {

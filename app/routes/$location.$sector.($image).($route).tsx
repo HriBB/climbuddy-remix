@@ -1,31 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { json, LoaderArgs } from '@remix-run/node'
+import { ActionArgs, LoaderArgs, json, redirect } from '@remix-run/node'
 import { Link, NavLink, useLoaderData, useNavigate } from '@remix-run/react'
 import type { ShouldRevalidateFunction } from '@remix-run/react'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
-import type { Swiper as SwiperType } from 'swiper'
 import { Virtual, Keyboard } from 'swiper'
+import type { Swiper as SwiperType } from 'swiper'
 
-import { execute } from '~/data.server'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
 import { Content, Header, List, ListItem, Main, Title } from '~/ui'
-import { SvgImage } from '~/paper'
+import { ImageToolbar, SizeButton, SvgImage } from '~/paper'
+import { imageSizeCookie } from '~/cookies'
+import { fetchImage, ImageSize } from '~/image'
 import { getUrl } from '~/location'
+import { ImageItemFragment } from '~/types'
 import {
   useImageCache,
   useImageIndex,
   useImageRoute,
   useMounted,
 } from '~/image'
-import {
-  ImageDocument,
-  ImageItemFragment,
-  ImageQuery,
-  ImageQueryVariables,
-} from '~/types'
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   defaultShouldRevalidate,
@@ -37,11 +33,25 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   return defaultShouldRevalidate
 }
 
-export const loader = async ({ params }: LoaderArgs) => {
-  const { data, errors } = await execute<ImageQuery, ImageQueryVariables>(
-    ImageDocument,
-    params
-  )
+export const action = async ({ request }: ActionArgs) => {
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = (await imageSizeCookie.parse(cookieHeader)) || {}
+
+  const form = await request.formData()
+  const size = form.get('imageSize') as string
+
+  cookie.imageSize = ImageSize.hasOwnProperty(size) ? size : ImageSize.medium
+
+  return redirect(request.referrer, {
+    status: 200,
+    headers: {
+      'Set-Cookie': await imageSizeCookie.serialize(cookie),
+    },
+  })
+}
+
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const { data, errors } = await fetchImage(params)
   const image = data?.image?.data
   const error = !!errors?.length && errors.map((e) => e.message).join('<br />')
   if (error) {
@@ -50,29 +60,34 @@ export const loader = async ({ params }: LoaderArgs) => {
   if (!image) {
     throw new Response('Image Not Found', { status: 404 })
   }
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = await imageSizeCookie.parse(cookieHeader)
+  const size = cookie?.imageSize || ImageSize.medium
+  const imageSize = ImageSize.hasOwnProperty(size) ? size : ImageSize.medium
   const route = image.attributes?.routes?.data.find(
     (r) => r.attributes?.slug === params.route
   )
-  return json({ image, route })
+  return json({ imageSize, image, route })
 }
 
 const swiperModules = [Virtual, Keyboard]
 const virtualOptions = { enabled: true, addSlidesBefore: 1, addSlidesAfter: 1 }
 
-export default function SectorImagePage() {
+export default function ImagePage() {
   const { location } = useLocationData()
   const { sector } = useSectorData()
-  const { image } = useLoaderData<typeof loader>()
+  const { image, imageSize } = useLoaderData<typeof loader>()
 
   const imageIndex = useImageIndex({ sector, image })
   const route = useImageRoute({ image })
   const cache = useImageCache({ image })
   const mounted = useMounted()
 
+  const images = mounted ? sector?.attributes?.images?.data : [image]
+
   const swiperRef = useRef<SwiperType | null>(null)
   const imageRef = useRef<ImageItemFragment | null | undefined>(image)
   const virtual = useMemo(() => (mounted ? virtualOptions : false), [mounted])
-  const images = mounted ? sector?.attributes?.images?.data : [image]
   const navigate = useNavigate()
   const onSwiper = useCallback(
     (swiper: SwiperType) => (swiperRef.current = swiper),
@@ -107,7 +122,7 @@ export default function SectorImagePage() {
         <Link to={getUrl(location)}>{location.attributes?.name}</Link> &gt;{' '}
         <Link to={getUrl(location, sector)}>{sector.attributes?.name}</Link>
       </Header>
-      <Content className="flex-1">
+      <Content className="relative flex-1">
         <Swiper
           key={mounted ? 'virtual' : 'non-virtual'}
           className="w-full h-full"
@@ -118,6 +133,10 @@ export default function SectorImagePage() {
           modules={swiperModules}
           keyboard={{ enabled: true }}
           virtual={virtual}
+          touchStartPreventDefault={false}
+          touchStartForcePreventDefault={false}
+          preventClicks={false}
+          preventClicksPropagation={false}
           onSwiper={onSwiper}
           onSlideChange={onSlideChange}
         >
@@ -138,6 +157,7 @@ export default function SectorImagePage() {
                     <div className="relative aspect-video md:aspect-auto md:flex-1 bg-slate-800">
                       <SvgImage
                         className="absolute top-0 left-0 right-0 bottom-0"
+                        imageSize={imageSize}
                         image={image}
                         route={isActive ? route : null}
                         data={cached?.data}
@@ -169,6 +189,9 @@ export default function SectorImagePage() {
             )
           })}
         </Swiper>
+        <ImageToolbar>
+          <SizeButton imageSize={imageSize} />
+        </ImageToolbar>
       </Content>
     </Main>
   )

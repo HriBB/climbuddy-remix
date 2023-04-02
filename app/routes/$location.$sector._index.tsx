@@ -4,7 +4,7 @@ import { Content, Header, List, ListItem, Main, Title } from '~/ui'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
 
-export default function SectorIndexPage() {
+export default function SectorPage() {
   const { location } = useLocationData()
   const { sector } = useSectorData()
   return (

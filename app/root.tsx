@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -9,7 +9,7 @@ import {
 } from '@remix-run/react'
 
 import swiperCss from '../node_modules/swiper/swiper.min.css'
-import swiperVirtualCss from '../node_modules/swiper/modules/virtual/virtual.min.css'
+import virtualCss from '../node_modules/swiper/modules/virtual/virtual.min.css'
 import tailwindCss from './tailwind.css'
 
 export const meta: MetaFunction = () => ({
@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: swiperCss },
-    { rel: 'stylesheet', href: swiperVirtualCss },
+    { rel: 'stylesheet', href: virtualCss },
     { rel: 'stylesheet', href: tailwindCss },
   ]
 }

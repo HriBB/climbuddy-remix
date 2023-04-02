@@ -1,12 +1,7 @@
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import { execute } from '~/data.server'
-import {
-  SectorDocument,
-  SectorFragment,
-  SectorQuery,
-  SectorQueryVariables,
-} from '~/types'
+import { fetchSector } from '~/sector'
+import { SectorFragment } from '~/types'
 
 type Params = {
   location: string
@@ -21,10 +16,7 @@ export const useSectorData = () =>
   useRouteLoaderData('routes/$location.$sector') as SectorData
 
 export const loader = async ({ params }: { params: Params }) => {
-  const { data, errors } = await execute<SectorQuery, SectorQueryVariables>(
-    SectorDocument,
-    params
-  )
+  const { data, errors } = await fetchSector(params)
   const sector = data?.sector?.data
   const error = !!errors?.length && errors.map((e) => e.message).join('<br />')
   if (error) {

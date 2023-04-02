@@ -1,18 +1,10 @@
 import { Link, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import { execute } from '~/data.server'
 import { Content, Header, List, ListItem, Main, Title } from '~/ui'
-import {
-  LocationsQuery,
-  LocationsDocument,
-  LocationsQueryVariables,
-} from '~/types'
+import { fetchLocations } from '~/location'
 
 export const loader = async () => {
-  const { data, errors } = await execute<
-    LocationsQuery,
-    LocationsQueryVariables
-  >(LocationsDocument)
+  const { data, errors } = await fetchLocations()
   const locations = data?.locations?.data || []
   const error = !!errors?.length && errors.map((e) => e.message).join('<br />')
   if (error) {
@@ -21,7 +13,7 @@ export const loader = async () => {
   return json({ locations })
 }
 
-export default function IndexPage() {
+export default function HomePage() {
   const { locations } = useLoaderData<typeof loader>()
   return (
     <Main>

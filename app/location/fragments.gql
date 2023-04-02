@@ -1,0 +1,22 @@
+fragment LocationItem on LocationEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+  }
+}
+
+fragment Location on LocationEntity {
+  id
+  attributes {
+    name
+    slug
+    order
+    sectors(sort: "order", pagination: { start: 0, limit: -1 }) {
+      data {
+        ...SectorItem
+      }
+    }
+  }
+}

@@ -1,3 +1,5 @@
 export * from './SvgImage'
 export * from './ImageToolbar'
 export * from './SizeButton'
+export * from './FullScreenButton'
+export * from './types'

@@ -1,10 +1,8 @@
 import clsx from 'clsx'
 
-type Props = React.ComponentProps<'ol'> & {
-  children: React.ReactNode
-}
+export type ListProps = React.ComponentProps<'ol'>
 
-export const List = ({ children, className, ...props }: Props) => (
+export const List = ({ children, className, ...props }: ListProps) => (
   <ol className={clsx('m-0 px-4', className)} {...props}>
     {children}
   </ol>

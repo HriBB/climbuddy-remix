@@ -6,39 +6,8 @@ import { ImageEntity, RouteEntity } from '~/types'
 import { createSvgImageStore } from './store'
 import { useMouse } from './useMouse'
 import { useTouch } from './useTouch'
-import { useEffect } from 'react'
-
-export enum ItemName {
-  Circle = 'Circle',
-  Path = 'Path',
-}
-
-export type Point = {
-  x: number
-  y: number
-}
-
-export type Segment = {
-  handleIn: Point
-  handleOut: Point
-  point: Point
-}
-
-export type Item = {
-  id: string
-  type: string
-  pathData?: string
-  segments?: Segment[]
-}
-
-export type ItemData = {
-  id?: string
-  type?: string
-  pathData?: string
-  segments?: Segment[]
-}
-
-export type ImageData = { [routeId: string]: Item[] }
+import { Fragment, useCallback, useEffect, useState } from 'react'
+import { ImageData } from './types'
 
 type Props = {
   className?: string
@@ -47,8 +16,6 @@ type Props = {
   route?: RouteEntity | null
   data?: ImageData | null
 }
-
-const strokeWidth = 2
 
 export const SvgImage = ({
   className,
@@ -84,10 +51,26 @@ export const SvgImage = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store])
 
+  const [hover, setHover] = useState<string | undefined>(undefined)
+
+  const handleMouseEnter = useCallback<React.MouseEventHandler<SVGPathElement>>(
+    (e) => {
+      setHover(e.currentTarget.dataset.id)
+    },
+    []
+  )
+
+  const handleMouseLeave = useCallback<React.MouseEventHandler<SVGPathElement>>(
+    (e) => {
+      setHover(undefined)
+    },
+    []
+  )
+
   return (
     <div className={clsx('overflow-hidden', className)}>
       <svg
-        className={clsx('w-full h-full mx-auto', !loaded && 'opacity-0')}
+        className={clsx('w-full h-full mx-auto' /*, !loaded && 'opacity-0'*/)}
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
@@ -111,19 +94,28 @@ export const SvgImage = ({
               if (!items || !items.length) return null
               const selected = route && route.id === id
               return (
-                <g
-                  key={id}
-                  fill="none"
-                  stroke={selected ? 'red' : 'black'}
-                  strokeWidth={strokeWidth / zoom}
-                >
+                <g key={id} fill="none">
                   {items.map((item) =>
                     item.type === 'Circle' && !selected ? null : (
-                      <path
-                        key={item.id}
-                        d={item.pathData}
-                        vectorEffect="non-scaling-stroke"
-                      />
+                      <Fragment key={item.id}>
+                        <path
+                          d={item.pathData}
+                          stroke={
+                            selected ? 'red' : hover === id ? 'yellow' : 'black'
+                          }
+                          strokeWidth={2 / zoom}
+                          vectorEffect="non-scaling-stroke"
+                        />
+                        <path
+                          d={item.pathData}
+                          stroke={'rgba(0,0,0,0)'}
+                          strokeWidth={20 / zoom}
+                          vectorEffect="non-scaling-stroke"
+                          data-id={id}
+                          onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave}
+                        />
+                      </Fragment>
                     )
                   )}
                 </g>

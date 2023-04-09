@@ -1,10 +1,8 @@
 import clsx from 'clsx'
 
-type Props = React.ComponentProps<'li'> & {
-  children: React.ReactNode
-}
+export type ListItemProps = React.ComponentProps<'li'>
 
-export const ListItem = ({ children, className, ...props }: Props) => (
+export const ListItem = ({ children, className, ...props }: ListItemProps) => (
   <li
     className={clsx(
       'text-lg border-b last:border-0 [&>a]:block [&>a]:p-2',

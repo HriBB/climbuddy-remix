@@ -1,10 +1,8 @@
 import clsx from 'clsx'
 
-type Props = React.ComponentProps<'div'> & {
-  children: React.ReactNode
-}
+export type HeaderProps = React.ComponentProps<'div'>
 
-export const Header = ({ children, className, ...props }: Props) => (
+export const Header = ({ children, className, ...props }: HeaderProps) => (
   <header className={clsx('p-4', className)} {...props}>
     {children}
   </header>

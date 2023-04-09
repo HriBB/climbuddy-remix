@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Form } from '@remix-run/react'
 import { ImageSize } from '~/image'
+import clsx from 'clsx'
 
-type Props = {
+type Props = React.ComponentProps<'div'> & {
   imageSize?: keyof typeof ImageSize
 }
 
-export const SizeButton = ({ imageSize = 'medium' }: Props) => {
+export const SizeButton = ({
+  imageSize = 'medium',
+  className,
+  ...props
+}: Props) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = useCallback(() => setOpen(!open), [open])
 
@@ -74,7 +79,7 @@ export const SizeButton = ({ imageSize = 'medium' }: Props) => {
   )
 
   return (
-    <div className="dropdown-button relative">
+    <div className={clsx('dropdown-button relative', className)} {...props}>
       <button
         className="w-16 h-8 bg-white text-xs"
         ref={buttonRef}

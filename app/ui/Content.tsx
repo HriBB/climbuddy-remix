@@ -1,10 +1,8 @@
 import clsx from 'clsx'
 
-type Props = React.ComponentProps<'div'> & {
-  children: React.ReactNode
-}
+export type ContentProps = React.ComponentProps<'div'>
 
-export const Content = ({ children, className, ...props }: Props) => (
+export const Content = ({ children, className, ...props }: ContentProps) => (
   <div className={clsx(className)} {...props}>
     {children}
   </div>

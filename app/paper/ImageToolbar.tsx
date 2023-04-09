@@ -1,7 +1,17 @@
-type Props = {
-  children: React.ReactNode
-}
+import clsx from 'clsx'
 
-export const ImageToolbar = ({ children }: Props) => {
-  return <div className="absolute z-10 bottom-0 right-0 p-2">{children}</div>
+type Props = React.ComponentProps<'div'>
+
+export const ImageToolbar = ({ children, className, ...props }: Props) => {
+  return (
+    <div
+      className={clsx(
+        'absolute flex gap-2 items-center z-10 bottom-0 right-0 p-2',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
 }

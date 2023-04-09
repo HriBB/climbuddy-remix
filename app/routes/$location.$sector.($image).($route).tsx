@@ -1,22 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-
 import { ActionArgs, LoaderArgs, json, redirect } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate } from '@remix-run/react'
-import type { ShouldRevalidateFunction } from '@remix-run/react'
-
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Virtual, Keyboard } from 'swiper'
-import type { Swiper as SwiperType } from 'swiper'
+import { Link, useLoaderData, ShouldRevalidateFunction } from '@remix-run/react'
+import { SwiperSlide } from 'swiper/react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
 import { Content, Header, List, Main, Title } from '~/ui'
+import { ImageSlider, ImageSize, fetchImage } from '~/image'
 import { ImageToolbar, SizeButton, FullScreenButton, SvgImage } from '~/paper'
 import { RouteListItem } from '~/route'
 import { imageSizeCookie } from '~/cookies'
-import { ImageSize, fetchImage } from '~/image'
-import { ImageItemFragment } from '~/types'
 import { getUrl } from '~/location'
 import {
   useImageCache,
@@ -72,9 +64,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json({ imageSize, image, route })
 }
 
-const swiperModules = [Virtual, Keyboard]
-const virtualOptions = { enabled: true, addSlidesBefore: 1, addSlidesAfter: 1 }
-
 export default function ImagePage() {
   const { location } = useLocationData()
   const { sector } = useSectorData()
@@ -88,36 +77,6 @@ export default function ImagePage() {
 
   const images = mounted ? sector?.attributes?.images?.data : [image]
 
-  const swiperRef = useRef<SwiperType | null>(null)
-  const imageRef = useRef<ImageItemFragment | null | undefined>(image)
-  const virtual = useMemo(() => (mounted ? virtualOptions : false), [mounted])
-  const navigate = useNavigate()
-  const onSwiper = useCallback(
-    (swiper: SwiperType) => (swiperRef.current = swiper),
-    []
-  )
-  const onSlideChange = useCallback(
-    (swiper: SwiperType) => {
-      const images = sector?.attributes?.images?.data || []
-      const image = images[swiper.activeIndex]
-      if (image && image.id !== imageRef.current?.id) {
-        imageRef.current = image
-        navigate(getUrl(location, sector, image), { replace: true })
-      }
-    },
-    [location, sector, navigate]
-  )
-  useEffect(() => {
-    if (image && image.id !== imageRef.current?.id) {
-      const images = sector?.attributes?.images?.data || []
-      const index = images.findIndex((i) => i.id === image.id)
-      if (index > -1) {
-        imageRef.current = image
-        swiperRef.current?.slideTo(index)
-      }
-    }
-  }, [image, sector?.attributes?.images?.data])
-
   return (
     <Main className="fixed w-full h-full">
       <Header>
@@ -127,22 +86,12 @@ export default function ImagePage() {
       </Header>
       <Content className="relative flex-1">
         <FullScreen className="w-full h-full" handle={fullScreen}>
-          <Swiper
-            key={mounted ? 'virtual' : 'non-virtual'}
-            className="w-full h-full"
-            spaceBetween={0}
-            slidesPerView={1}
-            centeredSlides
-            initialSlide={imageIndex}
-            modules={swiperModules}
-            keyboard={{ enabled: true }}
-            virtual={virtual}
-            touchStartPreventDefault={false}
-            touchStartForcePreventDefault={false}
-            preventClicks={false}
-            preventClicksPropagation={false}
-            onSwiper={onSwiper}
-            onSlideChange={onSlideChange}
+          <ImageSlider
+            location={location}
+            sector={sector}
+            image={image}
+            imageIndex={imageIndex}
+            mounted={mounted}
           >
             {images?.map((image, i) => {
               const ii = imageIndex
@@ -151,8 +100,8 @@ export default function ImagePage() {
               const cached = isVisible ? cache.current[image.id!] : undefined
               return (
                 <SwiperSlide
-                  className="flex flex-col"
                   key={image.id}
+                  className="flex flex-col"
                   virtualIndex={i}
                 >
                   <Title>{image.attributes?.name}</Title>
@@ -186,7 +135,7 @@ export default function ImagePage() {
                 </SwiperSlide>
               )
             })}
-          </Swiper>
+          </ImageSlider>
         </FullScreen>
         <ImageToolbar>
           <FullScreenButton fullScreen={fullScreen} />

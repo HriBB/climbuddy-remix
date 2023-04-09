@@ -1,7 +1,7 @@
 import { FullScreenHandle } from 'react-full-screen'
 import { IconButton, IconButtonProps } from '~/ui'
 
-type Props = Omit<IconButtonProps, 'onClick'> & {
+type Props = IconButtonProps & {
   fullScreen: FullScreenHandle
 }
 

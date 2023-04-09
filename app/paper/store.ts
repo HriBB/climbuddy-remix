@@ -8,6 +8,9 @@ export interface SvgImageState {
   setXY: (x: number, y: number) => void
   setZoom: (zoom: number) => void
   setLoaded: (loaded: boolean) => void
+  hover: string | undefined
+  onMouseEnter: (e: React.MouseEvent<SVGPathElement>) => void
+  onMouseLeave: (e: React.MouseEvent<SVGPathElement>) => void
 }
 
 export const createSvgImageStore = () =>
@@ -19,4 +22,7 @@ export const createSvgImageStore = () =>
     setXY: (x, y) => set(() => ({ x, y })),
     setZoom: (zoom) => set(() => ({ zoom })),
     setLoaded: (loaded) => set(() => ({ loaded })),
+    hover: undefined,
+    onMouseEnter: (e) => set(() => ({ hover: e.currentTarget.dataset.id })),
+    onMouseLeave: () => set(() => ({ hover: undefined })),
   }))

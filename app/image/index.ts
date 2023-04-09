@@ -1,3 +1,4 @@
+export * from './ImageSlider'
 export * from './fetchImage'
 export * from './getImageSrc'
 export * from './useImageCache'

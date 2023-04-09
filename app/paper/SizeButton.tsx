@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Form } from '@remix-run/react'
 import { ImageSize } from '~/image'
 import clsx from 'clsx'
+import { IconButton } from '~/ui'
 
 type Props = React.ComponentProps<'div'> & {
   imageSize?: keyof typeof ImageSize
@@ -80,13 +81,13 @@ export const SizeButton = ({
 
   return (
     <div className={clsx('dropdown-button relative', className)} {...props}>
-      <button
+      <IconButton
         className="w-16 h-8 bg-white text-xs"
         ref={buttonRef}
         onClick={toggleOpen}
       >
         {formImageSize}
-      </button>
+      </IconButton>
       <Form
         className={open ? 'absolute bottom-8 right-0 p-2 bg-white' : 'hidden'}
         method="post"

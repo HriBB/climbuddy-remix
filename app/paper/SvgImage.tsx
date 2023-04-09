@@ -1,3 +1,4 @@
+import { Fragment, useEffect } from 'react'
 import clsx from 'clsx'
 import useConstant from 'use-constant'
 import { useStore } from 'zustand'
@@ -6,7 +7,6 @@ import { ImageEntity, RouteEntity } from '~/types'
 import { createSvgImageStore } from './store'
 import { useMouse } from './useMouse'
 import { useTouch } from './useTouch'
-import { Fragment, useCallback, useEffect, useState } from 'react'
 import { ImageData } from './types'
 
 type Props = {
@@ -34,7 +34,7 @@ export const SvgImage = ({
   const width = file?.attributes?.width!
   const height = file?.attributes?.height!
 
-  const { x, y, zoom, loaded } = state
+  const { x, y, zoom, hover } = state
 
   useEffect(() => {
     const img = new Image()
@@ -50,22 +50,6 @@ export const SvgImage = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store])
-
-  const [hover, setHover] = useState<string | undefined>(undefined)
-
-  const handleMouseEnter = useCallback<React.MouseEventHandler<SVGPathElement>>(
-    (e) => {
-      setHover(e.currentTarget.dataset.id)
-    },
-    []
-  )
-
-  const handleMouseLeave = useCallback<React.MouseEventHandler<SVGPathElement>>(
-    (e) => {
-      setHover(undefined)
-    },
-    []
-  )
 
   return (
     <div className={clsx('overflow-hidden', className)}>
@@ -112,8 +96,8 @@ export const SvgImage = ({
                           strokeWidth={20 / zoom}
                           vectorEffect="non-scaling-stroke"
                           data-id={id}
-                          onMouseEnter={handleMouseEnter}
-                          onMouseLeave={handleMouseLeave}
+                          onMouseEnter={state.onMouseEnter}
+                          onMouseLeave={state.onMouseLeave}
                         />
                       </Fragment>
                     )

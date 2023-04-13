@@ -1,18 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useFetcher } from '@remix-run/react'
-import { ImageSize } from '~/image'
 import clsx from 'clsx'
-import { IconButton } from '~/ui'
+import { Theme } from '~/theme'
+import { IconButton } from '~/components'
+import { useRootData } from '~/root'
 
-type Props = React.ComponentProps<'div'> & {
-  imageSize?: ImageSize
-}
+type Props = React.ComponentProps<'div'>
 
-export const SizeButton = ({
-  imageSize = ImageSize.MEDIUM,
-  className,
-  ...props
-}: Props) => {
+export const ThemeButton = ({ className, ...props }: Props) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = useCallback(() => setOpen(!open), [open])
 
@@ -68,16 +63,14 @@ export const SizeButton = ({
   const buttonRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLUListElement>(null)
 
+  const { theme } = useRootData()
   const fetcher = useFetcher()
 
-  const setSize = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  const setTheme = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
-      const imageSize = e.currentTarget.dataset.size as ImageSize
-      if (imageSize && Object.values(ImageSize).includes(imageSize)) {
-        fetcher.submit(
-          { imageSize },
-          { method: 'POST', action: window.location.href }
-        )
+      const t = e.currentTarget.dataset.theme as Theme
+      if (t && Object.values(Theme).includes(t)) {
+        fetcher.submit({ theme: t }, { method: 'POST', action: '/' })
       }
       setOpen(false)
     },
@@ -87,7 +80,7 @@ export const SizeButton = ({
   return (
     <div className={clsx('relative', className)} {...props}>
       <IconButton ref={buttonRef} onClick={toggleOpen}>
-        {imageSize}
+        {theme}
       </IconButton>
       <ul
         className={
@@ -95,16 +88,16 @@ export const SizeButton = ({
         }
         ref={menuRef}
       >
-        {Object.values(ImageSize).map((size) => (
-          <li key={size}>
+        {Object.values(Theme).map((t) => (
+          <li key={t}>
             <button
               className={`w-full p-2 hover:bg-slate-400 text-left ${
-                size === imageSize ? 'bg-slate-300' : ''
+                t === theme ? 'bg-slate-300' : ''
               }`}
-              onClick={setSize}
-              data-size={size}
+              onClick={setTheme}
+              data-theme={t}
             >
-              {size}
+              {t}
             </button>
           </li>
         ))}

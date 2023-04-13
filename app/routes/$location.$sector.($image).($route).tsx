@@ -8,21 +8,19 @@ import { useSectorData } from './$location.$sector'
 import { imageSizeCookie } from '~/cookies'
 import { ImageFragment } from '~/types'
 import { getUrl } from '~/location'
-import { RouteListItem } from '~/route'
-import { Content } from '~/ui'
+import { Content } from '~/components'
 import {
-  ImageToolbar,
-  ImageTitle,
-  ImageContent,
-  RouteList,
-  SizeButton,
   FullScreenButton,
+  FullScreenContext,
+  ImageContent,
+  ImageTitle,
+  ImageToolbar,
+  RouteList,
+  RouteListItem,
+  SizeButton,
   SvgImage,
   ThemeButton,
   ToolbarRoute,
-  FullScreenContext,
-} from '~/paper'
-import {
   ImageSlider,
   ImageSize,
   fetchImage,
@@ -90,14 +88,14 @@ export default function ImagePage() {
   const route = useImageRoute({ image })
   const cache = useImageCache({ image })
   const mounted = useMounted()
-  const fs = useFullScreenHandle()
+  const fullScreen = useFullScreenHandle()
 
   const images = mounted ? sector?.attributes?.images?.data : [image]
 
   return (
     <Content className="fixed top-14 left-0 right-0 bottom-0">
-      <FullScreen className="relative flex-1 w-full h-full" handle={fs}>
-        <FullScreenContext.Provider value={fs}>
+      <FullScreen className="relative flex-1 w-full h-full" handle={fullScreen}>
+        <FullScreenContext.Provider value={fullScreen}>
           <ImageSlider
             location={location}
             sector={sector}
@@ -127,7 +125,7 @@ export default function ImagePage() {
                         imageSize={imageSize}
                         data={cached?.data}
                       />
-                      {!fs.active && (
+                      {!fullScreen.active && (
                         <RouteList className="swiper-no-swiping">
                           {cached?.routes?.map((r) => (
                             <RouteListItem
@@ -146,7 +144,7 @@ export default function ImagePage() {
             })}
           </ImageSlider>
           <ImageToolbar>
-            {route && fs.active && <ToolbarRoute route={route} />}
+            {route && fullScreen.active && <ToolbarRoute route={route} />}
             <ThemeButton />
             <SizeButton imageSize={imageSize} />
             <FullScreenButton />

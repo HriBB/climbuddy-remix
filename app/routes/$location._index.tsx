@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { getUrl } from '~/location'
-import { List, ListItem, Content, Title } from '~/ui'
+import { List, ListItem, Content, Title } from '~/components'
 import { useLocationData } from './$location'
 
 export default function LocationPage() {

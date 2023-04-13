@@ -1,5 +1,5 @@
 import { NavLink } from '@remix-run/react'
-import { ListItem } from '~/ui'
+import { ListItem } from '~/components'
 import { RouteItemFragment } from '~/types'
 
 type Props = {

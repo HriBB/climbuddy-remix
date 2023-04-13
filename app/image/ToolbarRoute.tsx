@@ -10,9 +10,12 @@ export const ToolbarRoute = ({
   className,
   ...props
 }: ToolbarRouteProps) => {
+  const { name, grade, sitstart } = route.attributes || {}
   return (
     <h3 className={clsx('text-white flex-1 mr-5', className)} {...props}>
-      {route.attributes?.name}
+      {name}
+      {grade && `, ${grade.data?.attributes?.grade}`}
+      {sitstart && ', ss'}
     </h3>
   )
 }

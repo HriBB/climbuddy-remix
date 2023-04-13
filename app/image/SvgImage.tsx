@@ -1,14 +1,15 @@
-import { Fragment, useCallback, useContext, useEffect } from 'react'
+import { Fragment, useCallback, useEffect } from 'react'
 import { useNavigate } from '@remix-run/react'
 import { useStore } from 'zustand'
 import clsx from 'clsx'
 import useConstant from 'use-constant'
-import { FullScreenContext } from './FullScreenContext'
-import { ImageSize, getImageSrc } from '~/image'
 import { ImageData } from './types'
+import { useFullScreen } from './FullScreenContext'
 import { createSvgImageStore } from './store'
+import { getImageSrc } from './getImageSrc'
 import { useMouse } from './useMouse'
 import { useTouch } from './useTouch'
+import { ImageSize } from './size'
 import { getUrl } from '~/location'
 import {
   ImageItemFragment,
@@ -39,7 +40,7 @@ export const SvgImage = ({
   data,
 }: Props) => {
   const navigate = useNavigate()
-  const fullScreen = useContext(FullScreenContext)
+  const fullScreen = useFullScreen()
   const store = useConstant(() => createSvgImageStore())
   const state = useStore(store)
   const mouse = useMouse(store)

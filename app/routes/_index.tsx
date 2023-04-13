@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import { List, ListItem, Content, Title } from '~/ui'
+import { List, ListItem, Content, Title } from '~/components'
 import { fetchLocations } from '~/location'
 
 export const loader = async () => {

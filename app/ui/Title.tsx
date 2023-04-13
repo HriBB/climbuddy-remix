@@ -10,7 +10,7 @@ export const Title = ({
   Tag = 'h1',
   ...props
 }: TitleProps) => (
-  <Tag className={clsx('text-2xl m-0 px-4 py-4 pt-0', className)} {...props}>
+  <Tag className={clsx('app-title text-2xl m-0 p-4', className)} {...props}>
     {children}
   </Tag>
 )

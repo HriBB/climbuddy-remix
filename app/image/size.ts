@@ -1,5 +1,5 @@
-export const ImageSize = {
-  small: 'small',
-  medium: 'medium',
-  large: 'large',
+export enum ImageSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
 }

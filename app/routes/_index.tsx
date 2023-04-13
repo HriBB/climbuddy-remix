@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
-import { Content, Header, List, ListItem, Main, Title } from '~/ui'
+import { List, ListItem, Content, Title } from '~/ui'
 import { fetchLocations } from '~/location'
 
 export const loader = async () => {
@@ -16,20 +16,17 @@ export const loader = async () => {
 export default function HomePage() {
   const { locations } = useLoaderData<typeof loader>()
   return (
-    <Main>
-      <Header>Home</Header>
-      <Content>
-        <Title>Locations</Title>
-        <List>
-          {locations.map((location) => (
-            <ListItem key={location.id}>
-              <Link to={`/${location.attributes?.slug}`}>
-                {location.attributes?.name}
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </Content>
-    </Main>
+    <Content>
+      <Title>Locations</Title>
+      <List>
+        {locations.map((location) => (
+          <ListItem key={location.id}>
+            <Link to={`/${location.attributes?.slug}`}>
+              {location.attributes?.name}
+            </Link>
+          </ListItem>
+        ))}
+      </List>
+    </Content>
   )
 }

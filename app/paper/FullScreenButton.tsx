@@ -1,13 +1,13 @@
-import { FullScreenHandle } from 'react-full-screen'
 import { IconButton, IconButtonProps } from '~/ui'
+import { FullScreenContext } from './FullScreenContext'
+import { useContext } from 'react'
 
-type Props = IconButtonProps & {
-  fullScreen: FullScreenHandle
-}
+type Props = IconButtonProps
 
-export const FullScreenButton = ({ fullScreen, ...props }: Props) => {
+export const FullScreenButton = (props: Props) => {
+  const { active, enter, exit } = useContext(FullScreenContext)
   return (
-    <IconButton onClick={fullScreen.enter} {...props}>
+    <IconButton onClick={active ? exit : enter} {...props}>
       fullscreen
     </IconButton>
   )

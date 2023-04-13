@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Form } from '@remix-run/react'
+import { useFetcher } from '@remix-run/react'
 import { ImageSize } from '~/image'
 import clsx from 'clsx'
 import { IconButton } from '~/ui'
 
 type Props = React.ComponentProps<'div'> & {
-  imageSize?: keyof typeof ImageSize
+  imageSize?: ImageSize
 }
 
 export const SizeButton = ({
-  imageSize = 'medium',
+  imageSize = ImageSize.MEDIUM,
   className,
   ...props
 }: Props) => {
@@ -33,7 +33,7 @@ export const SizeButton = ({
       if (!click.current) {
         click.current = (e) => {
           const el = e.target as HTMLElement
-          const withinList = formRef.current?.contains(el)
+          const withinList = menuRef.current?.contains(el)
           const withinButton = buttonRef.current?.contains(el)
           if (!withinList && !withinButton) setOpen(false)
         }
@@ -66,48 +66,49 @@ export const SizeButton = ({
   )
 
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
 
-  const [formImageSize, setFormImageSize] = useState<string>(imageSize)
+  const fetcher = useFetcher()
 
   const setSize = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
-      const size = e.currentTarget.dataset.size
-      if (size) setFormImageSize(size)
+      const imageSize = e.currentTarget.dataset.size as ImageSize
+      if (imageSize && Object.values(ImageSize).includes(imageSize)) {
+        fetcher.submit(
+          { imageSize },
+          { method: 'POST', action: window.location.href }
+        )
+      }
       setOpen(false)
     },
-    []
+    [fetcher]
   )
 
   return (
-    <div className={clsx('dropdown-button relative', className)} {...props}>
-      <IconButton
-        className="w-16 h-8 bg-white text-xs"
-        ref={buttonRef}
-        onClick={toggleOpen}
-      >
-        {formImageSize}
+    <div className={clsx('relative', className)} {...props}>
+      <IconButton ref={buttonRef} onClick={toggleOpen}>
+        {imageSize}
       </IconButton>
-      <Form
-        className={open ? 'absolute bottom-8 right-0 p-2 bg-white' : 'hidden'}
-        method="post"
-        ref={formRef}
+      <ul
+        className={
+          open ? 'absolute bottom-8 right-0 p-2 bg-white shadow' : 'hidden'
+        }
+        ref={menuRef}
       >
-        <input type="hidden" name="imageSize" value={formImageSize} />
-        <ul>
-          {Object.keys(ImageSize).map((size) => (
-            <li key={size}>
-              <button
-                className="w-full p-2 hover:bg-slate-400"
-                onClick={setSize}
-                data-size={size}
-              >
-                {size}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Form>
+        {Object.values(ImageSize).map((size) => (
+          <li key={size}>
+            <button
+              className={`w-full p-2 hover:bg-slate-400 text-left ${
+                size === imageSize ? 'bg-slate-300' : ''
+              }`}
+              onClick={setSize}
+              data-size={size}
+            >
+              {size}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

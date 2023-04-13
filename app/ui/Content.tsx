@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 
-export type ContentProps = React.ComponentProps<'div'>
+export type ContentProps = React.ComponentProps<'main'>
 
 export const Content = ({ children, className, ...props }: ContentProps) => (
-  <div className={clsx(className)} {...props}>
+  <main className={clsx('app-content flex flex-col', className)} {...props}>
     {children}
-  </div>
+  </main>
 )

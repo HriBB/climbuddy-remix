@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Form } from '@remix-run/react'
-import { ImageSize } from '~/image'
+import { useFetcher } from '@remix-run/react'
+import clsx from 'clsx'
+import { Theme } from '~/theme'
+import { IconButton } from '~/ui'
+import { useRootData } from '~/root'
 
-type Props = {
-  imageSize?: keyof typeof ImageSize
-}
+type Props = React.ComponentProps<'div'>
 
-export const SizeButton = ({ imageSize = 'medium' }: Props) => {
+export const ThemeButton = ({ className, ...props }: Props) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = useCallback(() => setOpen(!open), [open])
 
@@ -27,7 +28,7 @@ export const SizeButton = ({ imageSize = 'medium' }: Props) => {
       if (!click.current) {
         click.current = (e) => {
           const el = e.target as HTMLElement
-          const withinList = formRef.current?.contains(el)
+          const withinList = menuRef.current?.contains(el)
           const withinButton = buttonRef.current?.contains(el)
           if (!withinList && !withinButton) setOpen(false)
         }
@@ -60,48 +61,47 @@ export const SizeButton = ({ imageSize = 'medium' }: Props) => {
   )
 
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
 
-  const [formImageSize, setFormImageSize] = useState<string>(imageSize)
+  const { theme } = useRootData()
+  const fetcher = useFetcher()
 
-  const setSize = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  const setTheme = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
-      const size = e.currentTarget.dataset.size
-      if (size) setFormImageSize(size)
+      const t = e.currentTarget.dataset.theme as Theme
+      if (t && Object.values(Theme).includes(t)) {
+        fetcher.submit({ theme: t }, { method: 'POST', action: '/' })
+      }
       setOpen(false)
     },
-    []
+    [fetcher]
   )
 
   return (
-    <div className="dropdown-button relative">
-      <button
-        className="w-16 h-8 bg-white text-xs"
-        ref={buttonRef}
-        onClick={toggleOpen}
+    <div className={clsx('relative', className)} {...props}>
+      <IconButton ref={buttonRef} onClick={toggleOpen}>
+        {theme}
+      </IconButton>
+      <ul
+        className={
+          open ? 'absolute bottom-8 right-0 p-2 bg-white shadow' : 'hidden'
+        }
+        ref={menuRef}
       >
-        {formImageSize}
-      </button>
-      <Form
-        className={open ? 'absolute bottom-8 right-0 p-2 bg-white' : 'hidden'}
-        method="post"
-        ref={formRef}
-      >
-        <input type="hidden" name="imageSize" value={formImageSize} />
-        <ul>
-          {Object.keys(ImageSize).map((size) => (
-            <li key={size}>
-              <button
-                className="w-full p-2 hover:bg-slate-400"
-                onClick={setSize}
-                data-size={size}
-              >
-                {size}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Form>
+        {Object.values(Theme).map((t) => (
+          <li key={t}>
+            <button
+              className={`w-full p-2 hover:bg-slate-400 text-left ${
+                t === theme ? 'bg-slate-300' : ''
+              }`}
+              onClick={setTheme}
+              data-theme={t}
+            >
+              {t}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

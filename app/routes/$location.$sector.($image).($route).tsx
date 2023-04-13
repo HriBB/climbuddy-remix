@@ -19,7 +19,6 @@ import {
   RouteListItem,
   SizeButton,
   SvgImage,
-  ThemeButton,
   ToolbarRoute,
   ImageSlider,
   ImageSize,
@@ -145,7 +144,6 @@ export default function ImagePage() {
           </ImageSlider>
           <ImageToolbar>
             {route && fullScreen.active && <ToolbarRoute route={route} />}
-            <ThemeButton />
             <SizeButton imageSize={imageSize} />
             <FullScreenButton />
           </ImageToolbar>

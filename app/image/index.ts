@@ -8,7 +8,6 @@ export * from './RouteList'
 export * from './RouteListItem'
 export * from './SizeButton'
 export * from './SvgImage'
-export * from './ThemeButton'
 export * from './ToolbarRoute'
 
 export * from './size'

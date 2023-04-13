@@ -84,7 +84,7 @@ export const ThemeButton = ({ className, ...props }: Props) => {
       </IconButton>
       <ul
         className={
-          open ? 'absolute bottom-8 right-0 p-2 bg-white shadow' : 'hidden'
+          open ? 'absolute top-8 right-0 p-2 bg-white shadow z-50' : 'hidden'
         }
         ref={menuRef}
       >

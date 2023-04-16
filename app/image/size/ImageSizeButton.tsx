@@ -1,6 +1,7 @@
 import { Form, useLocation } from '@remix-run/react'
 import clsx from 'clsx'
 import { DetailsMenu } from '~/components'
+import { SettingsIcon } from '~/components/icons'
 import { ImageSize } from './types'
 
 type Props = React.ComponentPropsWithRef<'details'> & {
@@ -19,11 +20,11 @@ export const ImageSizeButton = ({
       className={clsx('relative cursor-pointer', className)}
       {...props}
     >
-      <summary className="flex items-center justify-center w-16 h-8 bg-white text-xs shadow">
-        {imageSize}
+      <summary className="flex items-center justify-center w-12 h-12">
+        <SettingsIcon />
       </summary>
       <Form
-        className="absolute bottom-8 right-0 p-2 bg-white dark:bg-slate-900 shadow z-50"
+        className="absolute bottom-12 right-0 p-2 bg-white shadow z-50"
         replace
         action="/image-size"
         method="post"

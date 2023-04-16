@@ -16,7 +16,7 @@ export const ThemeButton = ({ className, ...props }: Props) => {
       className={clsx('relative cursor-pointer', className)}
       {...props}
     >
-      <summary className="w-12 h-12 flex items-center justify-center text-xs shadow">
+      <summary className="flex items-center justify-center w-12 h-12">
         <LightIcon className="dark:hidden" />
         <DarkIcon className="hidden dark:block" />
       </summary>

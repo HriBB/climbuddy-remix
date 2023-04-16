@@ -12,7 +12,7 @@ export const ImageToolbar = ({
   return (
     <div
       className={clsx(
-        'absolute flex gap-2 items-center justify-end z-10 bottom-0 right-0 p-4',
+        'absolute flex items-center justify-end h-14 md:h-16 z-10 bottom-0 left-0 right-0 pl-4 pr-2',
         fullScreen.active ? 'left-0' : '',
         className
       )}

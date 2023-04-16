@@ -1,54 +1,42 @@
+import { createElement } from 'react'
 import { Form, useLocation } from '@remix-run/react'
-import clsx from 'clsx'
-import { DetailsMenu } from '~/components'
+import { DetailsMenu, SummaryIcon, MenuPopup, MenuButton } from '~/components'
 import { DarkIcon, LightIcon, icons } from './icons'
-import { useTheme } from './useTheme'
 import { Theme } from './types'
+import { useTheme } from './useTheme'
 
 type Props = React.ComponentPropsWithRef<'details'>
 
 export const ThemeButton = ({ className, ...props }: Props) => {
   const location = useLocation()
   const theme = useTheme()
-
   return (
-    <DetailsMenu
-      className={clsx('relative cursor-pointer', className)}
-      {...props}
-    >
-      <summary className="flex items-center justify-center w-12 h-12">
+    <DetailsMenu className={className} {...props}>
+      <SummaryIcon>
         <LightIcon className="dark:hidden" />
         <DarkIcon className="hidden dark:block" />
-      </summary>
-      <Form
-        className="absolute top-12 right-0 p-2 bg-white dark:bg-slate-800 shadow z-50"
-        replace
-        action="/theme"
-        method="post"
-      >
-        <input
-          type="hidden"
-          name="returnTo"
-          value={location.pathname + location.search}
-        />
-        {Object.values(Theme).map((t) => {
-          const Icon = icons[t]
-          return (
-            <button
+      </SummaryIcon>
+      <MenuPopup bottom left>
+        <Form replace action="/theme" method="post">
+          <input
+            type="hidden"
+            name="returnTo"
+            value={location.pathname + location.search}
+          />
+          {Object.values(Theme).map((t) => (
+            <MenuButton
               key={t}
-              className={clsx(
-                'flex items-center w-full gap-2 p-2 text-left',
-                t === theme && 'text-blue-400'
-              )}
+              active={t === theme}
+              disabled={t === theme}
               name="theme"
               value={t}
             >
-              <Icon />
+              {createElement(icons[t])}
               {t}
-            </button>
-          )
-        })}
-      </Form>
+            </MenuButton>
+          ))}
+        </Form>
+      </MenuPopup>
     </DetailsMenu>
   )
 }

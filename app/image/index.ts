@@ -1,12 +1,4 @@
-export * from './ImageContent'
-export * from './ImageSlider'
-export * from './ImageTitle'
-export * from './ImageToolbar'
-export * from './RouteList'
-export * from './RouteListItem'
-export * from './SvgImage'
-export * from './ToolbarRoute'
-
+export * from './components'
 export * from './fullscreen'
 export * from './hooks'
 export * from './size'

@@ -1,5 +1,9 @@
-import { LoaderArgs, json } from '@remix-run/node'
-import { ShouldRevalidateFunction, useLoaderData } from '@remix-run/react'
+import { LoaderArgs, SerializeFrom, json } from '@remix-run/node'
+import {
+  ShouldRevalidateFunction,
+  useLoaderData,
+  useRouteLoaderData,
+} from '@remix-run/react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { SwiperSlide } from 'swiper/react'
 import { useLocationData } from './$location'
@@ -45,6 +49,11 @@ export const loader = async ({ params }: LoaderArgs) => {
   }
   return json({ image })
 }
+
+export const useImageData = () =>
+  useRouteLoaderData('$location.$sector.($image).($route)') as SerializeFrom<
+    typeof loader
+  >
 
 export default function ImagePage() {
   const { location } = useLocationData()
@@ -113,7 +122,7 @@ export default function ImagePage() {
           </ImageSlider>
           <ImageToolbar>
             {route && fullScreen.active && <ToolbarRoute route={route} />}
-            <ImageSizeButton imageSize={imageSize} />
+            <ImageSizeButton />
             <FullScreenButton />
           </ImageToolbar>
         </FullScreenContext.Provider>

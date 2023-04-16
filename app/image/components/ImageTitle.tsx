@@ -1,5 +1,5 @@
 import { Title, TitleProps } from '~/components'
-import { useFullScreen } from './fullscreen'
+import { useFullScreen } from '../fullscreen'
 
 export type ImageTitleProps = TitleProps
 
@@ -10,7 +10,7 @@ export const ImageTitle = ({ children, ...props }: ImageTitleProps) => {
       className={
         fullScreen.active
           ? 'absolute top-0 left-0 right-0 z-50 text-white'
-          : 'text-black'
+          : 'w-full'
       }
       {...props}
     >

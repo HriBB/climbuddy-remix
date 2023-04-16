@@ -55,7 +55,7 @@ export default function App() {
         <Links />
         <ThemeScript />
       </head>
-      <body>
+      <body className="bg-gray-50 dark:bg-slate-800 dark:text-slate-300">
         <Header />
         <Outlet />
         <ScrollRestoration />

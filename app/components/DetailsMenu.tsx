@@ -1,11 +1,21 @@
 import { useLocation, useNavigation } from '@remix-run/react'
+import clsx from 'clsx'
 import { forwardRef, useEffect, useRef, useState } from 'react'
 
 type Props = React.ComponentPropsWithRef<'details'>
 
 export const DetailsMenu = forwardRef<HTMLDetailsElement, Props>(
   function DetailsMenu(
-    { onToggle, onMouseDown, onTouchStart, onFocus, open, ...rest },
+    {
+      children,
+      className,
+      open,
+      onToggle,
+      onMouseDown,
+      onTouchStart,
+      onFocus,
+      ...rest
+    },
     forwardedRef
   ) {
     const [isOpen, setIsOpen] = useState(false)
@@ -26,8 +36,6 @@ export const DetailsMenu = forwardRef<HTMLDetailsElement, Props>(
 
     useEffect(() => {
       if (isOpen) {
-        console.log('isOpen create handlers')
-
         let clickHandler = () => {
           if (!clickRef.current) setIsOpen(false)
           clickRef.current = false
@@ -49,6 +57,7 @@ export const DetailsMenu = forwardRef<HTMLDetailsElement, Props>(
 
     return (
       <details
+        className={clsx('relative cursor-pointer', className)}
         ref={forwardedRef}
         open={open ?? isOpen}
         onToggle={(event) => {
@@ -72,7 +81,9 @@ export const DetailsMenu = forwardRef<HTMLDetailsElement, Props>(
           if (isOpen) focusRef.current = true
         }}
         {...rest}
-      />
+      >
+        {children}
+      </details>
     )
   }
 )

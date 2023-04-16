@@ -3,13 +3,13 @@ import { useNavigate } from '@remix-run/react'
 import { useStore } from 'zustand'
 import clsx from 'clsx'
 import useConstant from 'use-constant'
-import { ImageData } from './types'
-import { useFullScreen } from './fullscreen'
-import { createSvgImageStore } from './store'
-import { getImageSrc } from './getImageSrc'
-import { useMouse, useTouch } from './hooks'
-import { ImageSize } from './size'
 import { getUrl } from '~/location'
+import { getImageSrc } from '../getImageSrc'
+import { useFullScreen } from '../fullscreen'
+import { createSvgImageStore } from '../store'
+import { useMouse, useTouch } from '../hooks'
+import { ImageSize } from '../size'
+import { ImageData } from '../types'
 import {
   ImageItemFragment,
   LocationFragment,
@@ -84,7 +84,7 @@ export const SvgImage = ({
         'relative',
         fullScreen.active
           ? 'flex-1 bg-black'
-          : 'aspect-video  md:aspect-auto md:flex-1 bg-slate-800',
+          : 'aspect-video  md:aspect-auto md:flex-1 bg-slate-200 dark:bg-slate-900',
         className
       )}
     >

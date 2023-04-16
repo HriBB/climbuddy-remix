@@ -11,7 +11,7 @@ import {
   SectorFragment,
 } from '~/types'
 
-type Props = SwiperProps & {
+export type ImageSliderProps = SwiperProps & {
   location: LocationFragment
   sector: SectorFragment
   image: ImageFragment
@@ -29,7 +29,7 @@ export const ImageSlider = ({
   image,
   imageIndex,
   mounted,
-}: Props) => {
+}: ImageSliderProps) => {
   const swiperRef = useRef<SwiperType | null>(null)
   const imageRef = useRef<ImageItemFragment | null | undefined>(image)
   const virtual = useMemo(() => (mounted ? virtualOptions : false), [mounted])

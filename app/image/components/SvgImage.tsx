@@ -83,14 +83,14 @@ export const SvgImage = ({
       className={clsx(
         'relative',
         fullScreen.active
-          ? 'flex-1 bg-black'
+          ? 'flex-1 bg-slate-900'
           : 'aspect-video  md:aspect-auto md:flex-1 bg-slate-200 dark:bg-slate-900',
         className
       )}
     >
       <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
         <svg
-          className={clsx('w-full h-full mx-auto' /*, !loaded && 'opacity-0'*/)}
+          className={clsx('w-full h-full mx-auto')}
           width={width}
           height={height}
           viewBox={`0 0 ${width} ${height}`}

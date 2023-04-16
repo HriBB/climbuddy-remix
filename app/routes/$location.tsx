@@ -1,6 +1,7 @@
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
 import { SerializeFrom, json } from '@remix-run/node'
 import { fetchLocation } from '~/location'
+import { CACHE_CONTROL } from '~/http'
 
 type Params = {
   location: string
@@ -19,7 +20,7 @@ export const loader = async ({ params }: { params: Params }) => {
   if (!location) {
     throw new Response('Location Not Found', { status: 404 })
   }
-  return json({ location })
+  return json({ location }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
 }
 
 export default function LocationLayout() {

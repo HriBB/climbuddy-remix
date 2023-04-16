@@ -5,6 +5,7 @@ export type MenuPopupProps = React.ComponentProps<'div'> & {
   left?: boolean
   right?: boolean
   bottom?: boolean
+  dark?: boolean
 }
 
 export const MenuPopup = ({
@@ -14,12 +15,14 @@ export const MenuPopup = ({
   left,
   right,
   bottom,
+  dark,
   ...props
 }: MenuPopupProps) => {
   return (
     <div
       className={clsx(
-        'absolute p-2 bg-white dark:bg-slate-950 shadow z-50',
+        'absolute p-2 shadow z-50',
+        dark ? 'bg-slate-950' : 'bg-white dark:bg-slate-950',
         bottom && 'top-12',
         top && 'bottom-12',
         right && 'left-0',

@@ -2,6 +2,7 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
 import { List, ListItem, Content, Title } from '~/components'
 import { fetchLocations } from '~/location'
+import { CACHE_CONTROL } from '~/http'
 
 export const loader = async () => {
   const { data, errors } = await fetchLocations()
@@ -10,7 +11,10 @@ export const loader = async () => {
   if (error) {
     throw new Response('Sector Loader Error', { status: 500 })
   }
-  return json({ locations })
+  return json(
+    { locations },
+    { headers: { 'Cache-Control': CACHE_CONTROL.doc } }
+  )
 }
 
 export default function HomePage() {

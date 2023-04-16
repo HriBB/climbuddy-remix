@@ -1,6 +1,7 @@
 import { SerializeFrom, json } from '@remix-run/node'
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
 import { fetchSector } from '~/sector'
+import { CACHE_CONTROL } from '~/http'
 
 type Params = {
   location: string
@@ -20,7 +21,7 @@ export const loader = async ({ params }: { params: Params }) => {
   if (!sector) {
     throw new Response('Sector Not Found', { status: 404 })
   }
-  return json({ sector })
+  return json({ sector }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
 }
 
 export default function SectorLayout() {

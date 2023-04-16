@@ -3,6 +3,9 @@ import { DetailsMenu, SummaryIcon, MenuPopup, MenuButton } from '~/components'
 import { SettingsIcon } from '~/components/icons'
 import { ImageSize } from './types'
 import { useImageSize } from './useImageSize'
+import { useFullScreen } from '../fullscreen'
+import { createElement } from 'react'
+import { icons } from './icons'
 
 type Props = React.ComponentPropsWithRef<'details'> & {
   imageSize?: ImageSize
@@ -11,12 +14,14 @@ type Props = React.ComponentPropsWithRef<'details'> & {
 export const ImageSizeButton = ({ className, ...props }: Props) => {
   const location = useLocation()
   const imageSize = useImageSize()
+  const fullScreen = useFullScreen()
+
   return (
     <DetailsMenu className={className} {...props}>
       <SummaryIcon>
         <SettingsIcon />
       </SummaryIcon>
-      <MenuPopup top left>
+      <MenuPopup top left dark={fullScreen.active}>
         <Form replace action="/image-size" method="post">
           <input
             type="hidden"
@@ -27,10 +32,12 @@ export const ImageSizeButton = ({ className, ...props }: Props) => {
             <MenuButton
               key={size}
               active={size === imageSize}
+              dark={fullScreen.active}
               disabled={size === imageSize}
               name="imageSize"
               value={size}
             >
+              {createElement(icons[size])}
               {size}
             </MenuButton>
           ))}

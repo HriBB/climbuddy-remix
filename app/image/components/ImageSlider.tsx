@@ -47,7 +47,10 @@ export const ImageSlider = ({
       const image = images[swiper.activeIndex]
       if (image && image.id !== imageRef.current?.id) {
         imageRef.current = image
-        navigate(getUrl(location, sector, image), { replace: true })
+        navigate(getUrl(location, sector, image), {
+          replace: true,
+          state: { image },
+        })
       }
     },
     [location, sector, navigate]
@@ -67,7 +70,7 @@ export const ImageSlider = ({
   return (
     <Swiper
       key={mounted ? 'virtual' : 'non-virtual'}
-      className="w-full h-full"
+      className="flex-1 w-full h-full"
       spaceBetween={0}
       slidesPerView={1}
       centeredSlides

@@ -15,24 +15,29 @@ export const Header = () => {
   const sector = s?.sector
   const image = i?.image
   return (
-    <header className="app-header flex items-center h-14 md:h-16 gap-1 px-5">
-      <Link to="/">Home</Link>
-      {location && sector && (
-        <>
-          <Separator />
-          <Link className="whitespace-nowrap" to={getUrl(location)}>
-            {location.attributes?.name}
-          </Link>
-          {sector && image && (
-            <>
-              <Separator />
-              <Link className="whitespace-nowrap" to={getUrl(location, sector)}>
-                {sector.attributes?.name}
-              </Link>
-            </>
-          )}
-        </>
-      )}
+    <header className="app-header flex items-center h-14 md:h-16 pl-4 pr-1">
+      <div className="flex items-center gap-1 flex-grow-0 overflow-hidden text-ellipsis">
+        <Link to="/">Home</Link>
+        {location && sector && (
+          <>
+            <Separator />
+            <Link className="whitespace-nowrap" to={getUrl(location)}>
+              {location.attributes?.name}
+            </Link>
+            {sector && image && (
+              <>
+                <Separator />
+                <Link
+                  className="whitespace-nowrap overflow-hidden text-ellipsis"
+                  to={getUrl(location, sector)}
+                >
+                  {sector.attributes?.name}
+                </Link>
+              </>
+            )}
+          </>
+        )}
+      </div>
       <div className="flex flex-1 justify-end">
         <ThemeButton />
       </div>

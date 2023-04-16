@@ -4,8 +4,9 @@ import {
   useLoaderData,
   useRouteLoaderData,
 } from '@remix-run/react'
-import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import { SwiperSlide } from 'swiper/react'
+import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
 import { getUrl } from '~/location'
@@ -30,6 +31,8 @@ import {
   useImageSize,
 } from '~/image'
 
+import { CACHE_CONTROL } from '~/http'
+
 export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
   const { defaultShouldRevalidate, nextParams, formData } = props
   if (formData?.get('imageSize')) return true
@@ -47,13 +50,13 @@ export const loader = async ({ params }: LoaderArgs) => {
   if (!image) {
     throw new Response('Image not found', { status: 404 })
   }
-  return json({ image })
+  return json({ image }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
 }
 
 export const useImageData = () =>
-  useRouteLoaderData('$location.$sector.($image).($route)') as SerializeFrom<
-    typeof loader
-  >
+  useRouteLoaderData(
+    'routes/$location.$sector.($image).($route)'
+  ) as SerializeFrom<typeof loader>
 
 export default function ImagePage() {
   const { location } = useLocationData()

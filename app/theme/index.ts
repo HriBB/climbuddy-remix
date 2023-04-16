@@ -1,2 +1,5 @@
+export * from './server'
 export * from './ThemeButton'
+export * from './ThemeScript'
 export * from './types'
+export * from './useTheme'

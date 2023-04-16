@@ -1,12 +1,9 @@
-import { ActionArgs, LoaderArgs, json } from '@remix-run/node'
-import { useLoaderData, useRouteLoaderData } from '@remix-run/react'
-import type { ShouldRevalidateFunction } from '@remix-run/react'
-import { SwiperSlide } from 'swiper/react'
+import { LoaderArgs, json } from '@remix-run/node'
+import { ShouldRevalidateFunction, useLoaderData } from '@remix-run/react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+import { SwiperSlide } from 'swiper/react'
 import { useLocationData } from './$location'
 import { useSectorData } from './$location.$sector'
-import { imageSizeCookie } from '~/cookies'
-import { ImageFragment } from '~/types'
 import { getUrl } from '~/location'
 import { Content } from '~/components'
 import {
@@ -17,16 +14,16 @@ import {
   ImageToolbar,
   RouteList,
   RouteListItem,
-  SizeButton,
+  ImageSizeButton,
   SvgImage,
   ToolbarRoute,
   ImageSlider,
-  ImageSize,
   fetchImage,
   useImageCache,
   useImageIndex,
   useImageRoute,
   useMounted,
+  useImageSize,
 } from '~/image'
 
 export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
@@ -36,57 +33,29 @@ export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
   return defaultShouldRevalidate
 }
 
-export type ImageData = {
-  image: ImageFragment
-  imageSize: ImageSize
-}
-
-export const useImageData = () =>
-  useRouteLoaderData('$location.$sector.($image).($route)') as ImageData
-
-export const action = async ({ request }: ActionArgs) => {
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = (await imageSizeCookie.parse(cookieHeader)) || {}
-  const form = await request.formData()
-  const s = form.get('imageSize') as ImageSize
-  cookie.imageSize = Object.values(ImageSize).includes(s) ? s : ImageSize.MEDIUM
-  return json(
-    { success: true },
-    {
-      status: 200,
-      headers: {
-        'Set-Cookie': await imageSizeCookie.serialize(cookie),
-      },
-    }
-  )
-}
-
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { data, errors } = await fetchImage(params)
-  const image = data?.image?.data
   const error = !!errors?.length && errors.map((e) => e.message).join('<br />')
   if (error) {
-    throw new Response('Image Loader Error', { status: 500 })
+    throw new Response('Image loader error', { status: 500 })
   }
+  const image = data?.image?.data
   if (!image) {
-    throw new Response('Image Not Found', { status: 404 })
+    throw new Response('Image not found', { status: 404 })
   }
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = await imageSizeCookie.parse(cookieHeader)
-  const s = cookie?.imageSize
-  const imageSize = Object.values(ImageSize).includes(s) ? s : ImageSize.MEDIUM
-  return json({ imageSize, image })
+  return json({ image })
 }
 
 export default function ImagePage() {
   const { location } = useLocationData()
   const { sector } = useSectorData()
-  const { image, imageSize } = useLoaderData<typeof loader>()
+  const { image } = useLoaderData<typeof loader>()
 
   const idx = useImageIndex({ sector, image })
   const route = useImageRoute({ image })
   const cache = useImageCache({ image })
   const mounted = useMounted()
+  const imageSize = useImageSize()
   const fullScreen = useFullScreenHandle()
 
   const images = mounted ? sector?.attributes?.images?.data : [image]
@@ -144,7 +113,7 @@ export default function ImagePage() {
           </ImageSlider>
           <ImageToolbar>
             {route && fullScreen.active && <ToolbarRoute route={route} />}
-            <SizeButton imageSize={imageSize} />
+            <ImageSizeButton imageSize={imageSize} />
             <FullScreenButton />
           </ImageToolbar>
         </FullScreenContext.Provider>

@@ -1,5 +1,5 @@
 import { Title, TitleProps } from '~/components'
-import { useFullScreen } from './FullScreenContext'
+import { useFullScreen } from './fullscreen'
 
 export type ImageTitleProps = TitleProps
 

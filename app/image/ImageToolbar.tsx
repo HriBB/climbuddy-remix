@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useFullScreen } from './FullScreenContext'
+import { useFullScreen } from './fullscreen'
 
 export type ImageToolbarProps = React.ComponentProps<'div'>
 

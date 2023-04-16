@@ -1,19 +1,14 @@
+import { SerializeFrom, json } from '@remix-run/node'
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
-import { json } from '@remix-run/node'
 import { fetchSector } from '~/sector'
-import { SectorFragment } from '~/types'
 
 type Params = {
   location: string
   sector: string
 }
 
-export type SectorData = {
-  sector: SectorFragment
-}
-
 export const useSectorData = () =>
-  useRouteLoaderData('routes/$location.$sector') as SectorData
+  useRouteLoaderData('routes/$location.$sector') as SerializeFrom<typeof loader>
 
 export const loader = async ({ params }: { params: Params }) => {
   const { data, errors } = await fetchSector(params)

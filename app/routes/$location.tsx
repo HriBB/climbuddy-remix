@@ -1,18 +1,13 @@
 import { Outlet, useRouteLoaderData } from '@remix-run/react'
-import { json } from '@remix-run/node'
+import { SerializeFrom, json } from '@remix-run/node'
 import { fetchLocation } from '~/location'
-import { LocationFragment } from '~/types'
 
 type Params = {
   location: string
 }
 
-export type LocationData = {
-  location: LocationFragment
-}
-
 export const useLocationData = () =>
-  useRouteLoaderData('routes/$location') as LocationData
+  useRouteLoaderData('routes/$location') as SerializeFrom<typeof loader>
 
 export const loader = async ({ params }: { params: Params }) => {
   const { data, errors } = await fetchLocation(params)

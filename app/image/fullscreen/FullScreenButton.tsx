@@ -1,5 +1,5 @@
 import { IconButton, IconButtonProps } from '~/components'
-import { useFullScreen } from './FullScreenContext'
+import { useFullScreen } from './useFullScreen'
 
 type Props = IconButtonProps
 

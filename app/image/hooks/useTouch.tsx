@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { StoreApi } from 'zustand'
-import { SvgImageState } from './store'
+import { SvgImageState } from '../store'
 
 const getDistance = (e: React.TouchEvent) =>
   Math.hypot(

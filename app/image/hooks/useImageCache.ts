@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { ImageFragment, RouteItemFragment } from '~/types'
-import { ImageData } from './types'
+import { ImageData } from '../types'
 
 export type CacheItem = {
   routes: RouteItemFragment[]

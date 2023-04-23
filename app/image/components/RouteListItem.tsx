@@ -1,21 +1,24 @@
 import { NavLink } from '@remix-run/react'
-import { ListItem } from '~/components'
+import { ListItem, ListItemProps } from '~/components'
 import { RouteItemFragment } from '~/types'
+import { RouteName } from './RouteName'
 
-type Props = {
+export type RouteListItemProps = ListItemProps & {
   route: RouteItemFragment
   active: boolean
   url: string
 }
 
-export const RouteListItem = ({ route, active, url }: Props) => {
-  const { name, grade, sitstart } = route.attributes || {}
+export const RouteListItem = ({
+  route,
+  active,
+  url,
+  ...props
+}: RouteListItemProps) => {
   return (
-    <ListItem active={active}>
+    <ListItem active={active} {...props}>
       <NavLink to={url}>
-        {name}
-        {grade && `, ${grade.data?.attributes?.grade}`}
-        {sitstart && ', ss'}
+        <RouteName route={route} />
       </NavLink>
     </ListItem>
   )

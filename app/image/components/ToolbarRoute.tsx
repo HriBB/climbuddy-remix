@@ -1,21 +1,19 @@
 import clsx from 'clsx'
 import { RouteItemFragment } from '~/types'
+import { RouteName } from './RouteName'
 
 export type ToolbarRouteProps = React.ComponentProps<'h3'> & {
   route: RouteItemFragment
 }
 
 export const ToolbarRoute = ({
-  route,
   className,
+  route,
   ...props
 }: ToolbarRouteProps) => {
-  const { name, grade, sitstart } = route.attributes || {}
   return (
     <h3 className={clsx('flex-1 mr-5', className)} {...props}>
-      {name}
-      {grade && `, ${grade.data?.attributes?.grade}`}
-      {sitstart && ', ss'}
+      <RouteName route={route} />
     </h3>
   )
 }

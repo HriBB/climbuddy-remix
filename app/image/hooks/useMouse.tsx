@@ -1,11 +1,13 @@
 import { useCallback, useRef } from 'react'
 import { StoreApi } from 'zustand'
 import { SvgImageState } from '../store'
+import { useImageSlider } from './useImageSlider'
 
 const zoomRatio = 1.1
 
 export const useMouse = (store: StoreApi<SvgImageState>) => {
   const down = useRef(false)
+  const { setLocked } = useImageSlider()
 
   const handleDown = useCallback<React.MouseEventHandler>((e) => {
     down.current = true
@@ -32,8 +34,9 @@ export const useMouse = (store: StoreApi<SvgImageState>) => {
       const { zoom, setZoom } = store.getState()
       const newZoom = e.deltaY > 0 ? zoom / zoomRatio : zoom * zoomRatio
       setZoom(newZoom)
+      setLocked(true)
     },
-    [store]
+    [store, setLocked]
   )
 
   return {

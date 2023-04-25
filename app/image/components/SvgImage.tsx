@@ -1,13 +1,13 @@
-import { Fragment, useCallback, useEffect } from 'react'
+import { Fragment, useCallback } from 'react'
 import { useNavigate } from '@remix-run/react'
 import { useStore } from 'zustand'
-import clsx from 'clsx'
 import useConstant from 'use-constant'
+import clsx from 'clsx'
 import { getUrl } from '~/location'
 import { getImageSrc } from '../getImageSrc'
 import { useFullScreen } from '../fullscreen'
 import { createSvgImageStore } from '../store'
-import { useMouse, useTouch } from '../hooks'
+import { useImageSlider, useMouse, useTouch } from '../hooks'
 import { ImageSize } from '../size'
 import { ImageData } from '../types'
 import {
@@ -44,6 +44,7 @@ export const SvgImage = ({
   const state = useStore(store)
   const mouse = useMouse(store)
   const touch = useTouch(store)
+  const slider = useImageSlider()
 
   const src = getImageSrc(image, imageSize)
   const file = image.attributes?.file?.data
@@ -51,21 +52,6 @@ export const SvgImage = ({
   const height = file?.attributes?.height!
 
   const { x, y, zoom, hover } = state
-
-  useEffect(() => {
-    const img = new Image()
-    img.src = src
-    if (img.complete) {
-      const { loaded, setLoaded } = store.getState()
-      if (!loaded) setLoaded(true)
-    } else {
-      img.onload = () => {
-        const { loaded, setLoaded } = store.getState()
-        if (!loaded) setLoaded(true)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store])
 
   const handleRouteClick = useCallback<React.MouseEventHandler<SVGGElement>>(
     (e) => {
@@ -78,17 +64,25 @@ export const SvgImage = ({
     [location, sector, image, routes, navigate]
   )
 
+  const handleDoubleClick = useCallback<React.MouseEventHandler>(() => {
+    store.getState().reset()
+    slider.setLocked(false)
+  }, [store, slider])
+
   return (
     <div
       className={clsx(
         'relative',
         fullScreen.active
           ? 'flex-1 bg-slate-900'
-          : 'aspect-video  md:aspect-auto md:flex-1 bg-slate-200 dark:bg-slate-900',
+          : 'aspect-video md:aspect-auto md:flex-1 bg-slate-200 dark:bg-slate-900',
         className
       )}
     >
-      <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
+      <div
+        className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden"
+        onDoubleClick={slider.locked ? handleDoubleClick : undefined}
+      >
         <svg
           className={clsx('w-full h-full mx-auto')}
           width={width}
@@ -97,13 +91,13 @@ export const SvgImage = ({
           style={{
             transform: `translate3d(${x}px,${y}px,0) scale3d(${zoom},${zoom},1)`,
           }}
-          onWheel={false ? mouse.handleWheel : undefined}
-          onMouseDown={false ? mouse.handleDown : undefined}
-          onMouseMove={false ? mouse.handleMove : undefined}
-          onMouseUp={false ? mouse.handleUp : undefined}
-          onTouchStart={false ? touch.handleStart : undefined}
-          onTouchMove={false ? touch.handleMove : undefined}
-          onTouchEnd={false ? touch.handleEnd : undefined}
+          onWheel={mouse.handleWheel}
+          onMouseDown={slider.locked ? mouse.handleDown : undefined}
+          onMouseMove={slider.locked ? mouse.handleMove : undefined}
+          onMouseUp={slider.locked ? mouse.handleUp : undefined}
+          onTouchStart={touch.handleStart}
+          onTouchMove={slider.locked ? touch.handleMove : undefined}
+          onTouchEnd={slider.locked ? touch.handleEnd : undefined}
         >
           <image width={width} height={height} href={src} />
           {data &&

@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react'
 import { StoreApi } from 'zustand'
 import { SvgImageState } from '../store'
+import { useImageSlider } from './useImageSlider'
 
 const getDistance = (e: React.TouchEvent) =>
   Math.hypot(
@@ -18,20 +19,26 @@ export const useTouch = (store: StoreApi<SvgImageState>) => {
   const start = useRef({ x: 0, y: 0, zoom: 1 })
   const center = useRef({ x: 0, y: 0 })
   const distance = useRef(0)
+  const slider = useImageSlider()
 
   const handleStart = useCallback<React.TouchEventHandler>(
     (e) => {
-      if (e.touches.length === 1 || e.touches.length === 2) {
+      const len = e.touches.length
+      if (!slider.locked) {
+        if (len < 2) return
+        if (len === 2) slider.setLocked(true)
+      }
+      if (len === 1 || len === 2) {
         const { x, y, zoom } = store.getState()
         start.current = { x, y, zoom }
         touches.current = e.touches
-      }
-      if (e.touches.length === 2) {
-        distance.current = getDistance(e)
-        center.current = getCenter(e)
+        if (len === 2) {
+          distance.current = getDistance(e)
+          center.current = getCenter(e)
+        }
       }
     },
-    [store]
+    [store, slider]
   )
 
   const handleMove = useCallback<React.TouchEventHandler>(

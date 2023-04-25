@@ -4,6 +4,7 @@ import { Swiper, SwiperProps } from 'swiper/react'
 import { Virtual, Keyboard } from 'swiper'
 import type { Swiper as SwiperType } from 'swiper'
 import { getUrl } from '~/location'
+import { useImageSlider } from '../hooks'
 import {
   ImageFragment,
   ImageItemFragment,
@@ -33,6 +34,7 @@ export const ImageSlider = ({
   const swiperRef = useRef<SwiperType | null>(null)
   const imageRef = useRef<ImageItemFragment | null | undefined>(image)
   const virtual = useMemo(() => (mounted ? virtualOptions : false), [mounted])
+  const slider = useImageSlider()
 
   const navigate = useNavigate()
 
@@ -78,6 +80,10 @@ export const ImageSlider = ({
       modules={swiperModules}
       keyboard={{ enabled: true }}
       virtual={virtual}
+      enabled={!slider.locked}
+      allowTouchMove={!slider.locked}
+      allowSlideNext={!slider.locked}
+      allowSlidePrev={!slider.locked}
       touchStartPreventDefault={false}
       touchStartForcePreventDefault={false}
       preventClicks={false}

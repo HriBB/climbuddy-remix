@@ -27,17 +27,6 @@ import {
   useImageSize,
 } from '~/image'
 
-/*
-import { CACHE_CONTROL } from '~/http'
-
-export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
-  const { defaultShouldRevalidate, nextParams, formData } = props
-  if (formData?.get('imageSize')) return true
-  if (nextParams.route) return false
-  return defaultShouldRevalidate
-}
-*/
-
 export const loader = async ({ params }: LoaderArgs) => {
   const { data, errors } = await fetchImage(params)
   const error = !!errors?.length && errors.map((e) => e.message).join('<br />')
@@ -48,7 +37,6 @@ export const loader = async ({ params }: LoaderArgs) => {
   if (!image) {
     throw new Response('Image not found', { status: 404 })
   }
-  //return json({ image }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
   return json({ image })
 }
 

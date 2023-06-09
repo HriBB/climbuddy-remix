@@ -1,9 +1,5 @@
 import { LoaderArgs, SerializeFrom, json } from '@remix-run/node'
-import {
-  ShouldRevalidateFunction,
-  useLoaderData,
-  useRouteLoaderData,
-} from '@remix-run/react'
+import { useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { SwiperSlide } from 'swiper/react'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 
@@ -31,6 +27,7 @@ import {
   useImageSize,
 } from '~/image'
 
+/*
 import { CACHE_CONTROL } from '~/http'
 
 export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
@@ -39,6 +36,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
   if (nextParams.route) return false
   return defaultShouldRevalidate
 }
+*/
 
 export const loader = async ({ params }: LoaderArgs) => {
   const { data, errors } = await fetchImage(params)

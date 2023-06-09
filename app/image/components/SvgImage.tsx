@@ -17,6 +17,15 @@ import {
   SectorFragment,
 } from '~/types'
 
+const colors = {
+  selected: '#ff0000',
+  hover: '#ff9900',
+  normal: '#000000',
+}
+
+const getPathColor = (selected?: boolean | null, hover?: boolean | null) =>
+  selected ? colors.selected : hover ? colors.hover : colors.normal
+
 type Props = {
   className?: string
   imageSize: ImageSize
@@ -119,13 +128,7 @@ export const SvgImage = ({
                         <Fragment key={item.id}>
                           <path
                             d={item.pathData}
-                            stroke={
-                              selected
-                                ? 'red'
-                                : hover === id
-                                ? 'yellow'
-                                : 'black'
-                            }
+                            stroke={getPathColor(selected, hover === id)}
                             strokeWidth={2 / zoom}
                             vectorEffect="non-scaling-stroke"
                           />

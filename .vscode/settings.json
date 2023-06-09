@@ -1,17 +1,3 @@
 {
-  "dotenv.enableAutocloaking": false,
-  "editor.formatOnSave": true,
-  "workbench.colorTheme": "Default Dark+",
-  //"tailwindCSS.experimental.classRegex": ["classNames\\(([^)]*)\\)"],
-  "tailwindCSS.classAttributes": [
-    "class",
-    "className",
-    "classNames",
-    ".*styles",
-    ".*Styles"
-  ],
-  "editor.quickSuggestions": {
-    "strings": true
-  },
-  "editor.inlineSuggest.enabled": true
+  "editor.formatOnSave": true
 }

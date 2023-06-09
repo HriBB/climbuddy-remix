@@ -48,7 +48,8 @@ export const loader = async ({ params }: LoaderArgs) => {
   if (!image) {
     throw new Response('Image not found', { status: 404 })
   }
-  return json({ image }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
+  //return json({ image }, { headers: { 'Cache-Control': CACHE_CONTROL.doc } })
+  return json({ image })
 }
 
 export const useImageData = () =>
